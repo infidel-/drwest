@@ -39,7 +39,7 @@ body
 #status
 {
   border: double;
-  width: 995;
+  width: 855;
   height: 26;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -68,7 +68,19 @@ body
   background: #222;
   border: 1px solid #777;
   padding-left: 3px;
-  width: 94z;
+  width: 94;
+  height: 25;
+}
+
+#endTurn
+{
+  font-size: 18px;
+  margin-top: 12;
+  cursor: pointer;
+  background: #222;
+  border: 1px solid #777;
+  padding-left: 3px;
+  width: 110;
   height: 25;
 }
 
@@ -87,8 +99,14 @@ body
 <td halign=left><div id="msg"></div>
 <td valign=top><div id="restart">RESTART</div>
 </table>
+
 <canvas id="map" width=1000 height=650></canvas>
-<div id="status"></div>
+
+<table width=1000>
+<tr>
+<td valign=top><div id="status"></div>
+<td valign=top><div id="endTurn">END TURN</div>
+</table>
 
 <td valign=top>
 <div id="haxe:trace"
@@ -102,6 +120,35 @@ body
 Tested in FF 3.5, Chromium, Opera 11. IE fail.
 <b>Post comments and feedback <a target=_blank href='feedback.html'>here</a>.</b>
 </p>
+
+<h3>Useful hints</h3>
+<table style='width:1024px'>
+<tr>
+<td valign=top halign=center>
+<ul style='font-size: 14px'>
+<li>Move mouse over any tile to get information about it
+<li>Press SPACE or E key to end turn
+<li>Bodies will spawn on cemetery
+<li>Clicking on a body will move into the laboratory
+<li>The lighter the color of the body the greater its quality
+<li>Bodies in the laboratory will be reanimated on the next turn
+<li>Reanimation can lead to raising Theory parameter
+<li>Raising Theory up to 10 wins the game
+</ul>
+
+<td valign=top halign=center>
+<ul style='font-size: 14px'>
+<li>Clicking on an empty space will put a marker there
+<li>The reanimated are attracted to the markers if they are close enough
+<li>When humans witness the death of another human, they will call the police
+<li>When no more reanimated are around, the police will leave the scene
+<li>No more than 10 police officers can be on the map at the same time
+<li>If the police gets too close to the laboratory, its Suspicion will rise
+<li>When Suspicion rises to 3, the game ends with a loss
+</ul>
+
+</table>
+
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

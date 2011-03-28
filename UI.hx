@@ -19,12 +19,13 @@ class UI
   public function new(g: Game)
     {
       game = g;
-      Lib.document.onkeyup = onKey;
+      Lib.document.onkeydown = onKey;
 
       e("version").innerHTML = Game.version;
       e("map").onclick = onMapClick;
       e("map").onmousemove = onMapMove;
       e("restart").onclick = onRestart;
+      e("endTurn").onclick = onEndTurn;
       msgLocked = false;
 
       // check if canvas is available
@@ -70,10 +71,24 @@ class UI
 
       // end turn
       if (ev.keyCode == 69 || ev.keyCode == 32) // E, Space
+        onEndTurn(null);
+/*        
         {
           msgLocked = false;
           msg("", false);
           game.endTurn();
+        }
+*/        
+
+      // dont propagate space button
+      if (ev.keyCode == 32)
+        { 
+          if (ev.stopPropagation)
+            ev.stopPropagation();
+
+          ev.cancelBubble = true;
+          ev.returnValue = false;
+          ev.preventDefault();
         }
     }
 
@@ -111,6 +126,15 @@ class UI
       msgLocked = false;
       msg("", false);
       game.restart();
+    }
+
+
+// on clicking restart button
+  public function onEndTurn(event)
+    {
+      msgLocked = false;
+      msg("", false);
+      game.endTurn();
     }
 
 
