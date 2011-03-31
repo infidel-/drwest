@@ -83,18 +83,12 @@ class Cell
       var str = type;
       var sym = '?';
       if (subtype != null) str = subtype;
-      if (object != null)
+      if (object != null) // object symbol
         {
           screen.fillStyle = object.getColor();
           sym = object.getSymbol();
         }
-      else if (map.hasMarker(x, y))
-        {
-          var m = map.markers.first();
-          screen.fillStyle = m.getColor();
-          sym = m.getSymbol();
-        }
-      else
+      else // terrain symbol
         {
           screen.fillStyle = Reflect.field(colors, str);
           sym = Reflect.field(symbols, str);
@@ -104,8 +98,55 @@ class Cell
           xx += 4;
           yy -= 6;
         }
+
+      // paint cell symbol
       if (isVisible)
         screen.fillText(sym, xx, yy);
+
+      paintMessage(screen, xx, yy); // paint message symbol
+      if (map.hasMarker(x, y))
+        paintMarker(screen, xx, yy); // paint marker symbol
+    }
+
+
+// paint marker symbol
+  function paintMarker(screen: Dynamic, xx: Int, yy: Int)
+    {
+      // background
+      var oldFont = screen.font;
+      screen.fillStyle = "rgba(0, 0, 0, 0.7)";
+      screen.font = Std.int(UI.cellSize / 1.5) + "px Verdana";
+      var metrics = screen.measureText('!');
+      screen.fillRect(xx + 6, yy + 6, metrics.width + 4, metrics.width * 2);
+
+      var m = map.markers.first();
+      screen.fillStyle = m.getColor();
+      var sym = m.getSymbol();
+
+      screen.fillStyle = '#ff0000';
+      screen.fillText(sym, xx + 8, yy + 8);
+      screen.font = oldFont;
+    }
+
+
+
+// paint message symbol
+  function paintMessage(screen: Dynamic, xx: Int, yy: Int)
+    {
+      var msg = map.getMessage(x, y);
+      if (msg == null)
+        return;
+
+      var oldFont = screen.font;
+      screen.fillStyle = "rgba(0, 0, 0, 0.7)";
+      screen.font = Std.int(UI.cellSize / 2) + "px Verdana";
+      var metrics = screen.measureText('?');
+      screen.fillRect(xx + 8, yy + 8, metrics.width + 4, metrics.width * 2);
+
+      screen.fillStyle = (msg.isImportant ? '#ffff00' : '#aaaa00');
+      var sym = (msg.isImportant ? '!' : '?');
+      screen.fillText(sym, xx + 10, yy + 10);
+      screen.font = oldFont;
     }
 
 
@@ -153,9 +194,9 @@ class Cell
         {
           var endTurn = object.activate(game.player);
 
-          game.checkFinish(); // check for finish
-          if (game.isFinished)
-            return;
+//          game.checkFinish(); // check for finish
+//          if (game.isFinished)
+//            return;
 
           if (endTurn)
             game.endTurn();

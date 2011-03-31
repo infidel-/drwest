@@ -31,7 +31,7 @@ class UI
       // check if canvas is available
       var map = e("map");
       if (!(untyped map).getContext)
-        Lib.window.alert("No canvas available. Please use Mozilla Firefox 3.5+ or Google Chrome.");
+        Lib.window.alert("No canvas available. Please use a canvas-compatible browser like Mozilla Firefox 3.5+ or Google Chrome.");
         
       // alert window
       alertWindow = Lib.document.createElement("alertWindow");
@@ -72,13 +72,6 @@ class UI
       // end turn
       if (ev.keyCode == 69 || ev.keyCode == 32) // E, Space
         onEndTurn(null);
-/*        
-        {
-          msgLocked = false;
-          msg("", false);
-          game.endTurn();
-        }
-*/        
 
       // dont propagate space button
       if (ev.keyCode == 32)
@@ -198,8 +191,20 @@ class UI
 */
       var cell = game.map.get(cursorX, cursorY);
       if (cell != null && cell.isVisible)
-        tip(cell.getNote());
-      else tip("");
+        {
+          tip(cell.getNote());
+
+          // draw message
+          var m = game.map.getMessage(cell.x, cell.y);
+          if (m != null)
+            msg(m.text);
+          else msg('');
+        }
+      else
+        {
+          tip("");
+          msg('');
+        }
 
       prevX = x;
       prevY = y;
@@ -280,18 +285,28 @@ class UI
         text = "You have finished the game in " + game.turns + " turns!";
       else text = "You have been found out...";
       var metrics = map.measureText(text);
-      map.fillText(text, (el.width - metrics.width) / 2,
-        (el.height - cellSize) / 2);
-/*
-      if (isVictory)
-        {
-          text = "You have managed to destroy " + game.zombiesDestroyed +
-            " creatures.";
-          var metrics = map.measureText(text);
-          map.fillText(text, (el.width - metrics.width) / 2,
-            (el.height - cellSize) / 2 + 40);
-        }
-*/        
+      var x = (el.width - metrics.width) / 2;
+      var y = (el.height - cellSize) / 2;
+      map.fillText(text, x, y);
+
+      // game stats
+      var font = Std.int(0.4 * UI.cellSize);
+      map.font = font + "px Verdana";
+      map.fillStyle = "yellow";
+      map.fillText(game.stats.humansDead +
+        " humans died during the course of these events.", 10, y + 70);
+      map.fillText(game.stats.copsDead +
+        " police officers died fulfilling their duty.",
+        10, y + 70 + font + 10);
+      map.fillText(game.stats.bodiesTested +
+        " different solutions were tested on the specimens.",
+        10, y + 70 + (font + 10) * 2);
+      map.fillText(game.stats.bodiesReanimated +
+        " specimens were successfully reanimated.",
+        10, y + 70 + (font + 10) * 3);
+      map.fillText(game.stats.reanimatedDestroyed +
+        " reanimated bodies were put down by the police.",
+        10, y + 70 + (font + 10) * 4);
     }
 
 

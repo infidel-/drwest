@@ -10,6 +10,7 @@ class Human extends Creature
     {
       super(g, xv, yv);
       type = 'human';
+      subtype = 'human';
 //      life = 3;
       quality = 1;
       if (Math.random() < 0.2)
@@ -51,6 +52,7 @@ class Human extends Creature
         return;
 
       die(); // die and spawn a body
+      game.stats.humansDead++;
       game.panic += 10;
       var o = new Body(game, x, y);
       o.quality = quality;

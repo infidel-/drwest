@@ -142,8 +142,8 @@ class Creature extends CellObject
   function aiAlertAroundMe()
     {
       // if someone was nearby, alert him and call the police
-      for (yy in (y - 3)...(y + 3))
-        for (xx in (x - 3)...(x + 3))
+      for (yy in (y - 2)...(y + 2))
+        for (xx in (x - 2)...(x + 2))
           {
             var c = map.get(xx, yy);
             if (c == null || c.object == null ||

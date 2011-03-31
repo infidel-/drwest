@@ -1,5 +1,6 @@
 // map class
 
+// map building
 typedef Building =
 {
   var x: Int;
@@ -10,6 +11,16 @@ typedef Building =
 };
 
 
+// map message
+typedef Message =
+{
+  var x: Int;
+  var y: Int;
+  var text: String; // message text
+  var isImportant: Bool; // is message important?
+}
+
+
 class Map
 {
   var ui: UI;
@@ -18,6 +29,7 @@ class Map
   var cells: Hash<Cell>;
   public var objects: List<CellObject>;
   public var markers: List<Marker>;
+  public var messages: Hash<Message>;
   var cemetery: Building;
   var police: Building;
   public var width: Int;
@@ -33,12 +45,51 @@ class Map
     }
 
 
+// add a message to map
+  public function addMessage(x: Int, y: Int, text: String, ?params: Dynamic)
+    {
+      if (params == null)
+        params = {};
+      if (params.isImportant == null)
+        params.isImportant = false;
+      var m: Message =
+        {
+          x: x,
+          y: y,
+          text: text,
+          isImportant: params.isImportant };
+      messages.set("" + x + "," + y, m);
+    }
+
+
+// remove a message from map
+  public function removeMessage(x: Int, y: Int)
+    {
+      messages.remove("" + x + "," + y);
+    }
+
+
+// get a message on this cell
+  public function getMessage(x: Int, y: Int): Message
+    {
+      return messages.get("" + x + "," + y);
+    }
+
+
+// clear messages
+  public function clearMessages()
+    {
+      for (m in messages.keys())
+        messages.remove(m);
+    }
+
 // generate map
   public function generate()
     {
       cells = new Hash<Cell>();
       objects = new List<CellObject>();
       markers = new List<Marker>();
+      messages = new Hash<Message>();
 
       // clean field
       for (y in 0...height)
@@ -123,7 +174,7 @@ class Map
             bldg.push(rect);
           }
 
-      // 
+      // find position for special buildings 
       var types = [ 'lab', 'cemetery', 'police'];
       for (t in types)
         {
@@ -132,6 +183,13 @@ class Map
           while (loop < 100)
             {
               n = Std.int(Math.random() * bldg.length);
+             
+              // lab must be near the edge (for easier gameplay)
+              if (t == 'lab' && bldg[n].x >= 2 && bldg[n].y >= 2 &&
+                  bldg[n].x + bldg[n].w <= width - 2 &&
+                  bldg[n].y + bldg[n].h <= height - 2)
+                continue;
+
               if (bldg[n].t == null)
                 break;
             }
@@ -169,105 +227,13 @@ class Map
 
           cnt++;
         }
-
-
-
-/*    
-      // buildings
-      var cnt = 0;
-      for (y in 0...height)
-        for (x in 0...width)
-          {
-            var cell = get(x,y);
-            if (Math.random() > 0.2)
-              continue;
-
-            // size
-            var sx = 2 + Std.int(Math.random() * 3);
-            var sy = 2 + Std.int(Math.random() * 3);
-
-            if (cnt == 0) // lab
-              {
-                sx = 2;
-                sy = 2;
-              }
-            else if (cnt == 1) // cemetery
-              {
-                sx = 4;
-                sy = 4;
-              }
-            else if (cnt == 2) // police
-              {
-                sx = 3;
-                sy = 3;
-              }
-
-            // make building smaller to fit map
-            if (x + sx > width && cnt > 1)
-              sx = width - x;
-            if (y + sy > height && cnt > 1)
-              sy = height - y;
-
-            if (x + sx > width || y + sy > height) // out of map
-              continue;
-
-            // check for adjacent buildings
-            var ok = true;
-            for (dy in -1...sy + 2)
-              for (dx in -1...sx + 2)
-                {
-                  if (dx == 0 && dy == 0)
-                    continue;
-                  var cell = get(x + dx, y + dy);
-                  if (cell != null && cell.type == "building")
-                    {
-                      ok = false;
-                      break;
-                    }
-                }
-
-            if (!ok)
-              continue;
-
-            // put building on map
-            for (dy in 0...sy)
-              for (dx in 0...sx)
-                {
-                  var cell = get(x + dx, y + dy);
-                  if (cell == null)
-                    continue;
-                  cell.type = "building";
-
-                  if (cnt == 0) // make 1st building the lab
-                    cell.subtype = 'lab';
-
-                  else if (cnt == 1) // cemetery
-                    cell.subtype = 'cemetery';
-
-                  else if (cnt == 2) // police station
-                    cell.subtype = 'police';
-                }
-//            cells.set(x + "," + y, cell);
-
-            var rect = { x: x, y: y, w: sx, h: sy };
-
-            if (cnt == 0) // lab
-              game.player.lab = rect;
-            else if (cnt == 1) // cemetery
-              cemetery = rect;
-            else if (cnt == 2) // police
-              police = rect;
-
-            cnt++;
-          }
-*/          
     }
 
 
 // generate creatures
   function generateCreatures()
     {
-      var cnt = Std.int(width * height / 17);
+      var cnt = Std.int(width * height / 18);
       for (i in 0...cnt)
         {
           // find empty spot
@@ -291,8 +257,6 @@ class Map
             }
 
           var c = new Human(game, x, y);
-//          objects.add(c);
-//          get(x,y).object = c;
 
           c.aiChangeRandomDirection(); // set movement direction
         }
@@ -324,8 +288,6 @@ class Map
             }
 
           var o = new Patient(game, x, y);
-//          objects.add(o);
-//          get(x,y).object = o;
         }
     }
 
@@ -350,9 +312,6 @@ class Map
             o.quality++;
           if (Math.random() < 0.2)
             o.freshness++;
-
-//          objects.add(o);
-//          get(x,y).object = o;
         }
     }
 

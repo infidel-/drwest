@@ -11,17 +11,6 @@ class Reanimated extends Creature
       life = 3;
     }
 
-/*
-// object activation
-  public override function activate(player: Player): Bool
-    {
-      die();
-//      player.money++;
-//      ui.msg('Grateful patient gives you money for the treatment.');
-      return true;
-    }
-*/
-
 
 // object hit by cop
   public override function hit(who: CellObject)
@@ -31,7 +20,8 @@ class Reanimated extends Creature
         return;
 
       die();
-      ui.msg('Reanimated has been put down.');
+      game.stats.reanimatedDestroyed++;
+      map.addMessage(x, y, 'Reanimated has been put down.');
     }
 
 
@@ -42,6 +32,7 @@ class Reanimated extends Creature
       var c = aiFindAdjacentObject('human');
       if (c != null)
         {
+          map.addMessage(x, y, 'The reanimated attacks ' + c.object.subtype + '.');
           c.object.hit(this); // attack
 
           return;
@@ -53,7 +44,7 @@ class Reanimated extends Creature
           var c = aiFindAdjacentObject('body');
           if (c != null)
             {
-              ui.msg('The reanimated hungrily devours the body.');
+              map.addMessage(x, y, 'The reanimated hungrily devours the body.');
               aiAlertAroundMe(); // alert people
               c.object.die();
 

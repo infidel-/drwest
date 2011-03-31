@@ -1,5 +1,16 @@
 // game class
 
+
+typedef GameStats =
+{
+  var humansDead: Int;
+  var copsDead: Int;
+  var bodiesTested: Int;
+  var bodiesReanimated: Int;
+  var reanimatedDestroyed: Int;
+}
+
+
 class Game
 {
   public var ui: UI;
@@ -7,6 +18,7 @@ class Game
   public var turns: Int;
   public var isFinished: Bool;
   public var player: Player;
+  public var stats: GameStats;
 
   public var panic: Int; // town panic meter
 
@@ -43,6 +55,7 @@ class Game
       if (isFinished)
         return;
 
+      map.clearMessages(); // clear old messages
       taskHandler(); // handle queued tasks
 
       ui.tip('');
@@ -99,7 +112,8 @@ class Game
           if (t.turns > 0)
             continue;
 
-          if (t.type == 'spawn.cop') // spawn a cop near x,y
+          // spawn a cop near x,y
+          if (t.type == 'spawn.cop' && map.getObjectCount('human', 'cop') < 10)
             {
               var cell = map.findEmpty(untyped t.params.x - 1,
                 untyped t.params.y - 1, 2, 2);
@@ -170,6 +184,14 @@ class Game
     {
       ui.track("startGame");
       tasks.clear();
+      stats = 
+        {
+          humansDead: 0,
+          copsDead: 0,
+          bodiesTested: 0,
+          bodiesReanimated: 0,
+          reanimatedDestroyed: 0
+        };
       isFinished = false;
       turns = 0;
       panic = 0;

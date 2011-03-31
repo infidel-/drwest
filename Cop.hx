@@ -35,7 +35,8 @@ class Cop extends Human
       var c = aiFindAdjacentObject('reanimated');
       if (c != null)
         {
-          ui.msg('Cop attacks the reanimated.');
+//          ui.msg
+          map.addMessage(x, y, 'Cop attacks the reanimated.');
           c.object.hit(this); // attack
 
           return;
@@ -74,6 +75,7 @@ class Cop extends Human
         return;
 
       die(); // die and spawn a body
+      game.stats.copsDead++;
       game.panic += 15; // dead cops bad for stability
       var o = new Body(game, x, y);
       o.skip = true;

@@ -19,11 +19,14 @@ class Body extends CellObject
   public function testSolution(player: Player): Bool
     {
       die();
+      game.stats.bodiesTested++;
 
       // failure
       if (100 * Math.random() < 45 - 15 * quality)
         {
-          ui.msg("You test a new solution on the body... Nothing happens.");
+          map.addMessage(x, y, 
+//          ui.msg(
+            "You test a new solution on the body... Nothing happens.");
           return true;
         }
 
@@ -61,12 +64,14 @@ class Body extends CellObject
           var o = new Reanimated(game, cell.x, cell.y);
           o.life = 3 + Std.int(player.theory / 3);
           o.level = 1 + Std.int(player.theory / 3);
-          o.skip = true;
+          game.stats.bodiesReanimated++;
         }
 
-      ui.msg(
+//      ui.msg(
+      map.addMessage(x, y, 
         (spawnOk ? "With the new solution the body is reanimated! " : 'You have failed to reanimate the body. ') +
-        (mod > 0 ? '[Theory +' + mod + ']' : ''));
+        (mod > 0 ? '[Theory +' + mod + ']' : ''),
+        (mod > 0 ? { isImportant: true } : {}));
 
       return true;
     }
@@ -96,15 +101,20 @@ class Body extends CellObject
       
       if (nx == -1) // lab is full
         {
-          ui.msg('Your laboratory is full!');
+//          ui.msg(
+          map.addMessage(x, y, 
+            'Your laboratory is full!');
           return false;
         }
 
+//      ui.msg('You bring the specimen to your laboratory.');
+      map.addMessage(x, y, 'You bring the specimen to your laboratory.');
+      game.panic += 10; // stealing bodies make people suspicious
+
+      map.removeMessage(nx, ny);
+
       // move this object to lab
       move(nx, ny);
-
-      ui.msg('You bring the specimen to your laboratory.');
-      game.panic += 10; // stealing bodies make people suspicious
 
       map.paint();
       ui.paintStatus();
