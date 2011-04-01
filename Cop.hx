@@ -93,6 +93,19 @@ class Cop extends Human
     }
 
 
+// object message
+  public override function getMessage(): String
+    {
+      if (state == 'alerted')
+        {
+          if (aiFindAdjacentObject('reanimated') != null)
+            return "\"You won't get away with this!\"";
+          else return "\"Where's that damn perpetrator?\"";
+        }
+      else return "\"Dum-de-dum, patrolling around.\"";
+    }
+
+
 // object color
   public override function getColor(): String
     {

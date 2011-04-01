@@ -198,7 +198,17 @@ class UI
           var m = game.map.getMessage(cell.x, cell.y);
           if (m != null)
             msg(m.text);
+
+          // draw object message
+          else if (cell.object != null)
+            msg(cell.object.getMessage());
+
+          // draw marker help
+          else if (game.map.hasMarker(cell.x, cell.y))
+            msg('This marker will attract reanimated if they are close enough. ');
+
           else msg('');
+
         }
       else
         {
@@ -237,7 +247,7 @@ class UI
         return;
       if (isLocked)
         msgLocked = true;
-      e("msg").innerHTML = s;
+      e("msg").innerHTML = '<center>' + s + '</center>';
     }
 
 
@@ -294,7 +304,7 @@ class UI
       map.font = font + "px Verdana";
       map.fillStyle = "yellow";
       map.fillText(game.stats.humansDead +
-        " humans died during the course of these events.", 10, y + 70);
+        " citizens died during the course of these horrible events.", 10, y + 70);
       map.fillText(game.stats.copsDead +
         " police officers died fulfilling their duty.",
         10, y + 70 + font + 10);

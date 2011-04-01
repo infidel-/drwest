@@ -10,6 +10,7 @@ class Human extends Creature
     {
       super(g, xv, yv);
       type = 'human';
+      name = 'human';
       subtype = 'human';
 //      life = 3;
       quality = 1;
@@ -69,25 +70,29 @@ class Human extends Creature
 
       // spawn 2 cops in 2 turns
       state = 'alerted';
-      ui.msg('Authorities have been notified!');
+      map.addMessage(x, y, 'Authorities have been notified!');
       aiCallForHelp(ax, ay);
       aiCallForHelp(ax, ay);
     }
 
 
-// object activation
-//  public override function activate(player: Player): Bool
-//    {
-//      die();
-//      player.money++;
-//      ui.msg('Grateful patient gives you money for the treatment.');
-//      return true;
-//    }
+// object message
+  public override function getMessage(): String
+    {
+      if (isQuest)
+        return message;
+      else if (state == 'alerted')
+        return "\"Good lord, I'm so scared!\"";
+      else return "";
+    }
 
 
 // object color
   public override function getColor(): String
     {
+      if (isQuest)
+        return '#00ff00';
+
       if (state == 'alerted')
         return 'red';
 
@@ -95,6 +100,7 @@ class Human extends Creature
         return '#333333';
       else if (quality == 2)
         return '#999999';
+
       return 'white';
     }
 
@@ -112,7 +118,7 @@ class Human extends Creature
       var p3 = '';
       for (i in 0...life)
         p3 += '*';
-      return 'human (BQ ' + quality + ') ' + p3;
+      return name + ' (BQ ' + quality + ') ' + p3;
 //        + ' ' + timerAlerted;
     }
 }

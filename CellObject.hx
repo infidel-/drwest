@@ -10,10 +10,17 @@ class CellObject
   public var y: Int;
   public var type: String; // object type (body, etc)
   public var subtype: String; // object subtype (cop, etc)
+  public var name: String; // name in case of named object
   public var turns: Int; // how many turns this object lives
   public var life: Int; // object life (humans, etc)
   public var skip: Bool; // skip next ai() call
   public var state: String; // object state
+  public var message: String; // object message (for message bar)
+
+  // quest-related stuff
+  public var isQuest: Bool; // is quest object? (changes behaviour)
+  public var quest: quests.Quest; // related quest
+  public var questTag: String; // quest tag in that quest
 
   public function new(g: Game, xv: Int, yv: Int, ?dontAdd: Bool)
     {
@@ -27,6 +34,8 @@ class CellObject
       life = 1;
       state = 'idle';
       subtype = null;
+      isQuest = false;
+      message = '';
 
       if (dontAdd == null || dontAdd == false)
         {
@@ -90,6 +99,13 @@ class CellObject
       for (i in 0...life)
         p3 += '*';
       return p1 + p2 + ' ' + p3;
+    }
+
+
+// object message
+  public function getMessage(): String
+    {
+      return message;
     }
 
 

@@ -1,5 +1,8 @@
 // map class
 
+import quests.Quest;
+
+
 // map building
 typedef Building =
 {
@@ -27,9 +30,10 @@ class Map
   var game: Game;
 
   var cells: Hash<Cell>;
-  public var objects: List<CellObject>;
-  public var markers: List<Marker>;
-  public var messages: Hash<Message>;
+  public var objects: List<CellObject>; // game objects
+  public var markers: List<Marker>; // reanimated markers
+  public var messages: Hash<Message>; // game messages
+  public var quests: List<Quest>; // currently active quests
   var cemetery: Building;
   var police: Building;
   public var width: Int;
@@ -90,6 +94,7 @@ class Map
       objects = new List<CellObject>();
       markers = new List<Marker>();
       messages = new Hash<Message>();
+      quests = new List<Quest>();
 
       // clean field
       for (y in 0...height)
@@ -119,6 +124,11 @@ class Map
 
       generateBuildings();
       generateCreatures();
+
+      // DEBUG
+      var q = new quests.AnxiousAssistant(game);
+      quests.add(q);
+      q.start();
     }
 
 

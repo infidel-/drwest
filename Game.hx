@@ -202,7 +202,7 @@ class Game
     }
 
 
-  public static var version = "v1"; // game version
+  public static var version = "v2"; // game version
 }
 
 
