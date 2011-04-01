@@ -33,7 +33,6 @@ class Map
   public var objects: List<CellObject>; // game objects
   public var markers: List<Marker>; // reanimated markers
   public var messages: Hash<Message>; // game messages
-  public var quests: List<Quest>; // currently active quests
   var cemetery: Building;
   var police: Building;
   public var width: Int;
@@ -94,7 +93,6 @@ class Map
       objects = new List<CellObject>();
       markers = new List<Marker>();
       messages = new Hash<Message>();
-      quests = new List<Quest>();
 
       // clean field
       for (y in 0...height)
@@ -124,11 +122,12 @@ class Map
 
       generateBuildings();
       generateCreatures();
-
+/*
       // DEBUG
       var q = new quests.AnxiousAssistant(game);
       quests.add(q);
       q.start();
+*/
     }
 
 
@@ -302,7 +301,7 @@ class Map
     }
 
 
-// spawn cemetery
+// spawn bodies on cemetery
   public function spawnOnCemetery()
     {
       var cnt = 2;
@@ -371,6 +370,17 @@ class Map
       for (m in markers)
         if (m.x == x && m.y == y)
           return m;
+
+      return null;
+    }
+
+
+// helper: get quest object
+  public function getQuestObject(q: Quest, tag: String): CellObject
+    {
+      for (o in objects)
+        if (o.quest == q && o.questTag == tag)
+          return o;
 
       return null;
     }

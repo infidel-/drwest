@@ -6,6 +6,7 @@ class Cop extends Human
     {
       super(g, xv, yv);
       subtype = 'cop';
+      name = 'officer';
       life = 2;
       skip = true;
 
@@ -35,8 +36,7 @@ class Cop extends Human
       var c = aiFindAdjacentObject('reanimated');
       if (c != null)
         {
-//          ui.msg
-          map.addMessage(x, y, 'Cop attacks the reanimated.');
+          map.addMessage(x, y, 'Officer attacks the reanimated.');
           c.object.hit(this); // attack
 
           return;
@@ -66,8 +66,6 @@ class Cop extends Human
       if (Math.random() < 0.6) // 60% chance to hit
         life--;
       isHit = true;
-//      if (life > 0) // alert self if still alive
-//        alert();
       aiAlertAroundMe(); // alert people
       aiCallForHelp(x, y); // call for help
 
@@ -126,7 +124,7 @@ class Cop extends Human
       var p3 = '';
       for (i in 0...life)
         p3 += '*';
-      return 'cop (BQ ' + quality + ') ' + p3;
+      return 'officer (BQ ' + quality + ') ' + p3;
 //        + ' ' + timerAlerted;
     }
 }

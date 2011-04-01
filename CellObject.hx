@@ -124,6 +124,6 @@ class CellObject
 
 
 // object ai
-  public function ai()
+  public dynamic function ai()
     {}
 }

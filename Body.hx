@@ -101,13 +101,10 @@ class Body extends CellObject
       
       if (nx == -1) // lab is full
         {
-//          ui.msg(
-          map.addMessage(x, y, 
-            'Your laboratory is full!');
+          map.addMessage(x, y, 'Your laboratory is full!');
           return false;
         }
 
-//      ui.msg('You bring the specimen to your laboratory.');
       map.addMessage(x, y, 'You bring the specimen to your laboratory.');
       game.panic += 10; // stealing bodies make people suspicious
 

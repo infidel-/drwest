@@ -8,6 +8,7 @@ class Reanimated extends Creature
     {
       super(g, xv, yv);
       type = 'reanimated';
+      level = 1;
       life = 3;
     }
 
@@ -32,7 +33,8 @@ class Reanimated extends Creature
       var c = aiFindAdjacentObject('human');
       if (c != null)
         {
-          map.addMessage(x, y, 'The reanimated attacks ' + c.object.subtype + '.');
+          map.addMessage(x, y, 'The reanimated attacks ' +
+            c.object.name + '.');
           c.object.hit(this); // attack
 
           return;

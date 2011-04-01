@@ -78,8 +78,8 @@ class Creature extends CellObject
       for (i in 0...Map.dirx.length)
         {
           var c = map.get(x + Map.dirx[i], y + Map.diry[i]);
-          if (c == null || c.object == null || c.object.type != t ||
-              c.type == 'building')
+          if (c == null || c.object == null || c.object.type != t)
+          // || c.type == 'building')
             continue;
 
           return c;

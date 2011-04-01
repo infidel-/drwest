@@ -1,5 +1,6 @@
 // game class
 
+import quests.Quest;
 
 typedef GameStats =
 {
@@ -19,6 +20,8 @@ class Game
   public var isFinished: Bool;
   public var player: Player;
   public var stats: GameStats;
+  public var quests: List<Quest>; // currently active quests
+  public var questsCompleted: List<Dynamic>; // quests completed/failed
 
   public var panic: Int; // town panic meter
 
@@ -67,6 +70,12 @@ class Game
           else o.skip = false;
         }
 
+      for (q in quests) // quests tick
+        {
+          q.turnsPassed++;
+          q.tick();
+        }
+
       map.paint();
       ui.paintStatus();
       checkFinish();
@@ -78,10 +87,65 @@ class Game
       // spawn objects
 //      map.spawnPatients();
       map.spawnOnCemetery();
+      spawnQuests();
 
       turns++;
       map.paint();
       ui.paintStatus();
+    }
+
+
+// spawn quests
+  public function spawnQuests()
+    {
+      // check probability
+      var prob = 0.2;
+      if (quests.length > 0)
+        prob = 0.05;
+      if (Math.random() > prob)
+        return;
+
+      // spawn a quest
+      for (cl in Game.possibleQuests)
+        {
+          // check if this quest is already active
+          var ok = true;
+          for (qqq in quests)
+            if (Type.getClassName(Type.getClass(qqq)) == Type.getClassName(cl))
+              {
+                ok = false;
+                break;
+              }
+          if (!ok)
+            continue;
+
+          // check if this quest is already done
+          var ok = true;
+          if (!cl.isRepeatable)
+            {
+              for (qqcl in questsCompleted)
+                if (Type.getClassName(cl) == Type.getClassName(qqcl))
+                  {
+                    ok = false;
+                    break;
+                  }
+
+              if (!ok)
+                continue;
+            }
+    
+          // check for quest start conditions
+          var ok = Reflect.callMethod(cl, Reflect.field(cl, "check"), [ this ]);
+          if (!ok)
+            continue;
+
+          var q = Type.createInstance(cl, [ this ]);
+          quests.add(q);
+          q.start();
+
+          questsCompleted.add(cl);
+          return; // one quest at a time
+        }
     }
 
 
@@ -169,13 +233,15 @@ class Game
 
            player.suspicion++;
            
-            if (player.suspicion >= 3)
-              {
-                ui.paintStatus();
-                finish(false);
-              }
             return;
           }
+
+      if (player.suspicion >= 3)
+        {
+          player.suspicion = 3;
+          ui.paintStatus();
+          finish(false);
+        }
     }
 
 
@@ -196,6 +262,8 @@ class Game
       turns = 0;
       panic = 0;
       player = new Player(this);
+      quests = new List<Quest>();
+      questsCompleted = new List<Dynamic>();
       map.generate();
       map.paint();
       ui.paintStatus();
@@ -203,6 +271,8 @@ class Game
 
 
   public static var version = "v2"; // game version
+  public static var possibleQuests: Array<Dynamic> =
+    [ quests.AnxiousAssistant ];
 }
 
 
