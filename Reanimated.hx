@@ -30,7 +30,7 @@ class Reanimated extends Creature
   public override function ai()
     {
       // find close humans and attack
-      var c = aiFindAdjacentObject('human');
+      var c = aiFindAdjacentObject('human', false);
       if (c != null)
         {
           map.addMessage(x, y, 'The reanimated attacks ' +
@@ -43,7 +43,7 @@ class Reanimated extends Creature
       // upgraded reanimated can devour bodies regaining life
       if (level > 1)
         {
-          var c = aiFindAdjacentObject('body');
+          var c = aiFindAdjacentObject('body', true);
           if (c != null)
             {
               map.addMessage(x, y, 'The reanimated hungrily devours the body.');

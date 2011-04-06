@@ -4,7 +4,7 @@ package quests;
 
 class AnxiousAssistant extends Quest
 {
-  public static var isRepeatable = true;//false;
+  public static var isRepeatable = false;
 
 
   public function new(g: Game)
@@ -18,7 +18,7 @@ class AnxiousAssistant extends Quest
   public static function check(game: Game): Bool
     {
       // player needs to have at least 1 reanimated
-      if (game.map.reanimated == 0)
+      if (game.map.reanimated == 0 || game.player.theory < 3)
         return false;
 
       // check if first lab cell is occupied
@@ -81,7 +81,7 @@ class AnxiousAssistant extends Quest
       if (o != null)
         return;
 
-      message("You have one more very fresh specimen...");
+      message("You have managed to obtain a very fresh specimen...");
       finish();
     }
 }

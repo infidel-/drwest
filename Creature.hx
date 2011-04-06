@@ -73,13 +73,13 @@ class Creature extends CellObject
 
 
 // find random adjacent object of this type
-  public function aiFindAdjacentObject(t: String): Cell
+  public function aiFindAdjacentObject(t: String, isOutside: Bool): Cell
     {
       for (i in 0...Map.dirx.length)
         {
           var c = map.get(x + Map.dirx[i], y + Map.diry[i]);
-          if (c == null || c.object == null || c.object.type != t)
-          // || c.type == 'building')
+          if (c == null || c.object == null || c.object.type != t ||
+              (c.type == 'building' && isOutside))
             continue;
 
           return c;

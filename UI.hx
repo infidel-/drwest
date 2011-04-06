@@ -39,9 +39,9 @@ class UI
       alertWindow.style.position = 'absolute';
       alertWindow.style.zIndex = 20;
       alertWindow.style.width = 600;
-      alertWindow.style.height = 450;
+      alertWindow.style.height = 250;
       alertWindow.style.left = 200; 
-      alertWindow.style.top = 150;
+      alertWindow.style.top = 250;
       alertWindow.style.background = '#222';
 	  alertWindow.style.border = '4px double #ffffff';
       Lib.document.body.appendChild(alertWindow);
@@ -53,13 +53,13 @@ class UI
       alertText.style.left = 10;
       alertText.style.top = 10;
       alertText.style.width = 580;
-      alertText.style.height = 400;
+      alertText.style.height = 200;
       alertText.style.background = '#111';
 	  alertText.style.border = '1px solid #777';
       alertWindow.appendChild(alertText);
 
       // alert close button
-      var alertClose = createCloseButton(alertWindow, 260, 415, 'alertClose');
+      var alertClose = createCloseButton(alertWindow, 260, 215, 'alertClose');
 	  alertClose.onclick = onAlertCloseClick;
     }
 

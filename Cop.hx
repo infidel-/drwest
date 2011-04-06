@@ -33,7 +33,7 @@ class Cop extends Human
         }
 
       // if reanimated is close, attack it
-      var c = aiFindAdjacentObject('reanimated');
+      var c = aiFindAdjacentObject('reanimated', false);
       if (c != null)
         {
           map.addMessage(x, y, 'Officer attacks the reanimated.');
@@ -96,7 +96,7 @@ class Cop extends Human
     {
       if (state == 'alerted')
         {
-          if (aiFindAdjacentObject('reanimated') != null)
+          if (aiFindAdjacentObject('reanimated', false) != null)
             return "\"You won't get away with this!\"";
           else return "\"Where's that damn perpetrator?\"";
         }

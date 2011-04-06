@@ -62,18 +62,18 @@ class Game
       taskHandler(); // handle queued tasks
 
       ui.tip('');
+      for (q in quests) // quests tick
+        {
+          q.turnsPassed++;
+          q.tick();
+        }
+
       for (o in map.objects) // objects ai
         {
           o.turns++;
           if (!o.skip)
             o.ai();
           else o.skip = false;
-        }
-
-      for (q in quests) // quests tick
-        {
-          q.turnsPassed++;
-          q.tick();
         }
 
       map.paint();
@@ -99,10 +99,11 @@ class Game
   public function spawnQuests()
     {
       // check probability
-      var prob = 0.2;
+      var prob = 0.05;
       if (quests.length > 0)
-        prob = 0.05;
-      if (Math.random() > prob)
+        prob = 0.025;
+      var rnd = Math.random();
+      if (rnd > prob)
         return;
 
       // spawn a quest
@@ -135,7 +136,7 @@ class Game
             }
     
           // check for quest start conditions
-          var ok = Reflect.callMethod(cl, Reflect.field(cl, "check"), [ this ]);
+          var ok: Bool = Reflect.callMethod(cl, Reflect.field(cl, "check"), [ this ]);
           if (!ok)
             continue;
 
@@ -231,9 +232,7 @@ class Game
                 c.object.subtype != 'cop')
               continue;
 
-           player.suspicion++;
-           
-            return;
+            player.suspicion++;
           }
 
       if (player.suspicion >= 3)
@@ -272,7 +271,7 @@ class Game
 
   public static var version = "v2"; // game version
   public static var possibleQuests: Array<Dynamic> =
-    [ quests.AnxiousAssistant ];
+    [ quests.AnxiousAssistant, quests.NosyReporter ];
 }
 
 

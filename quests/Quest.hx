@@ -26,8 +26,7 @@ class Quest
   inline function spawnQuestMarker(x: Int, y: Int, name: String, tag: String,
       message: String)
     {
-      var o = new QuestMarker(game, game.player.lab.x, game.player.lab.y,
-        this);
+      var o = new QuestMarker(game, x, y, this);
       o.name = name;
       o.message = message;
       o.questTag = tag;

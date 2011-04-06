@@ -122,12 +122,13 @@ class Map
 
       generateBuildings();
       generateCreatures();
+
 /*
       // DEBUG
-      var q = new quests.AnxiousAssistant(game);
-      quests.add(q);
+      var q = new quests.NosyReporter(game);
+      game.quests.add(q);
       q.start();
-*/
+*/      
     }
 
 

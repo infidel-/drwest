@@ -200,6 +200,7 @@ class Cell
 
           if (endTurn)
             game.endTurn();
+          else game.map.paint();
         }
 
       // create marker
