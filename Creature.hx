@@ -117,24 +117,51 @@ class Creature extends CellObject
 
 
 // try to move to this cell (possibly generating path in the future)
+  static var dirNumX = [ 0, -1, 0, 1, -1, 0, 1, -1, 0, 1 ];
+  static var dirNumY = [ 0, 1, 1, 1, 0, 0, 0, -1, -1, -1 ];
+  static var dirSecondary = [ [ 0, 0 ], [ 2, 4 ], [ 1, 3 ], [ 2, 6 ],
+    [ 1, 7 ], [ 0, 0 ], [ 3, 9 ], [ 4, 8 ], [ 7, 9 ], [ 6, 8 ] ];
   public function aiMoveTo(xx: Int, yy: Int)
     {
       var dx = xx - x, dy = yy - y;
       if (dx < 0)
-        dx = - 1;
+        dx = -1;
       else if (dx > 0)
         dx = 1;
       if (dy < 0)
-        dy = - 1;
+        dy = -1;
       else if (dy > 0)
         dy = 1;
 
+      // find dir number
+      var dir = 0;
+      for (i in 1...9)
+        if (dx == dirNumX[i] && dy == dirNumY[i])
+          {
+            dir = i;
+            break;
+          }
+
+      // check primary dir
       var c = map.get(x + dx, y + dy);
       if (c == null || !c.isWalkable() || c.object != null)
-        return;
-//      trace(x + ',' + y + ' -> ' + c.x + ',' + c.y);
+        {
+          // secondary dir
+          var dir2 = dirSecondary[dir][0];
+          c = map.get(x + dirNumX[dir2], y + dirNumY[dir2]);
+          if (c == null || !c.isWalkable() || c.object != null)
+            {
+              // tertiary dir
+              var dir3 = dirSecondary[dir][1];
+              c = map.get(x + dirNumX[dir3], y + dirNumY[dir3]);
+              if (c == null || !c.isWalkable() || c.object != null)
+                return;
+              else dir = dir3;
+            }
+          else dir = dir2;
+        }
 
-      move(x + dx, y + dy);
+      move(c.x, c.y);
     }
 
 
