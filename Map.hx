@@ -33,6 +33,7 @@ class Map
   public var objects: List<CellObject>; // game objects
   public var markers: List<Marker>; // reanimated markers
   public var messages: Hash<Message>; // game messages
+  public var buildings: Array<Building>; // buildings list
   var cemetery: Building;
   var police: Building;
   public var width: Int;
@@ -93,6 +94,7 @@ class Map
       objects = new List<CellObject>();
       markers = new List<Marker>();
       messages = new Hash<Message>();
+      buildings = new Array<Building>();
 
       // clean field
       for (y in 0...height)
@@ -193,6 +195,10 @@ class Map
           while (loop < 100)
             {
               n = Std.int(Math.random() * bldg.length);
+
+              // specials need to change building size
+              if (bldg[n].w < 3 || bldg[n].h < 3)
+                continue;
              
               // lab must be near the edge (for easier gameplay)
               if (t == 'lab' && bldg[n].x >= 2 && bldg[n].y >= 2 &&
@@ -211,6 +217,16 @@ class Map
               b.w = 2;
               b.h = 2;
             }
+          else if (t == 'police')
+            {
+              b.w = 3;
+              b.h = 3;
+            }
+          else if (t == 'cemetery')
+            {
+              b.w = 3;
+              b.h = 2;
+            }
         }
 
 
@@ -226,6 +242,7 @@ class Map
                   continue;
                 cell.type = "building";
                 cell.subtype = b.t;
+                cell.building = b;
               }
 
           if (b.t == 'lab')
@@ -237,6 +254,8 @@ class Map
 
           cnt++;
         }
+
+      buildings = bldg;
     }
 
 

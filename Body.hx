@@ -148,6 +148,13 @@ class Body extends CellObject
     }
 
 
+// object image
+  public override function getImage(): String
+    {
+      return 'body' + quality;
+    }
+
+
 // object symbol
   public override function getSymbol(): String
     {

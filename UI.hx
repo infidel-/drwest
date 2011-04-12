@@ -12,6 +12,7 @@ class UI
   public var cursorY: Int;
   public var prevX: Int; // previous mouse coordinates
   public var prevY: Int;
+  public var images: Hash<Dynamic>; // images array
 
   public var justClicked: Bool; // hack: skip first mouse move after click
   public var msgLocked: Bool; // is msg panel locked until mouse click?
@@ -61,6 +62,41 @@ class UI
       // alert close button
       var alertClose = createCloseButton(alertWindow, 260, 215, 'alertClose');
 	  alertClose.onclick = onAlertCloseClick;
+
+      loadImages();
+    }
+
+
+// load images
+  function loadImages()
+    {
+      images = new Hash<Dynamic>();
+
+      var imgnames = [ 'tile_building', 'tile_cemetery', 'tile_grass',
+        'tile_lab', 'tile_police', 'tile_tree',
+        'undefined', 'object_body1', 'object_body3', 'object_human1',
+        'object_human3', 'object_human_alerted2', 'object_quest',
+        'object_body2', 'object_cop', 'object_human2', 'object_human_alerted1',
+        'object_human_alerted3', 'object_human_quest', 'object_reanimated',
+        'building2x2', 'building2x3', 'building2x4', 'building3x2',
+        'building3x3', 'building3x4', 'building4x2', 'building4x3',
+        'building4x4', 'building_cemetery', 'building_lab', 'building_police'
+        ];
+
+      for (nm in imgnames)
+        {
+          var img = untyped __js__("new Image()");
+          img.onload = onLoadImage;
+          img.src = 'images/' + nm + '.png';
+
+          images.set(nm, img);
+        }
+    }
+
+
+  function onLoadImage()
+    {
+      game.map.paint();
     }
 
 
@@ -145,8 +181,8 @@ class UI
         }
 
       var map = e("map");
-      var x = event.clientX - map.offsetLeft;
-      var y = event.clientY - map.offsetTop;
+      var x = event.clientX - map.offsetLeft - 14;
+      var y = event.clientY - map.offsetTop - 14;
       var cellX = Std.int((x - 5) / cellSize); 
       var cellY = Std.int((y - 7) / cellSize);
 //      trace(x + "," + y + " -> " + cellX + "," + cellY);
@@ -174,8 +210,9 @@ class UI
         return;
 
       var map = e("map");
-      var x = event.clientX - map.offsetLeft;
-      var y = event.clientY - map.offsetTop;
+      var x = event.clientX - map.offsetLeft - 14; 
+      var y = event.clientY - map.offsetTop - 14;
+//      trace(x + ' ' + y + ' : ' + map.offsetLeft + ',' + map.offsetTop);
 
       cursorX = Std.int((x - 5) / cellSize); 
       cursorY = Std.int((y - 7) / cellSize);

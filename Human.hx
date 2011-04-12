@@ -105,6 +105,19 @@ class Human extends Creature
     }
 
 
+// object image
+  public override function getImage(): String
+    {
+      if (isQuest)
+        return 'human_quest';
+
+      if (state == 'alerted')
+        return 'human_alerted' + quality;
+
+      return 'human' + quality;
+    }
+
+
 // object symbol
   public override function getSymbol(): String
     {

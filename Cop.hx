@@ -118,6 +118,13 @@ class Cop extends Human
     }
 
 
+// object symbol
+  public override function getImage(): String
+    {
+      return 'cop';
+    }
+
+
 // object note
   public override function getNote(): String
     {

@@ -123,6 +123,13 @@ class CellObject
     }
 
 
+// object symbol
+  public function getImage(): String
+    {
+      return type;
+    }
+
+
 // object ai
   public dynamic function ai()
     {}

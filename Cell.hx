@@ -1,5 +1,7 @@
 // map cell class
 
+import Map;
+
 class Cell
 {
   public var map: Map;
@@ -10,6 +12,7 @@ class Cell
   public var y: Int;
   public var type: String; // cell type (grass, water, etc)
   public var subtype: String; // cell subtype - for buildings
+  public var building: Building; // which building this cell belongs to
   public var isVisible: Bool; // cell visible to player?
   public var object: CellObject; // cell object
 
@@ -74,9 +77,48 @@ class Cell
         return;
 
       // paint selected
-      if (isSelected)
-        paintSelected(screen);
+//      if (isSelected)
+//        paintSelected(screen);
 
+      var xx = 5 + x * UI.cellSize;
+      var yy = 7 + y * UI.cellSize;
+
+      var skipBG = false;
+      if (type == 'building' && (x != building.x || y != building.y))
+        skipBG = true;
+
+      var sym = 'tile_' + type;
+      if (subtype != null) sym = 'tile_' + subtype;
+      var w = UI.cellSize, h = UI.cellSize;
+
+      // building images are larger than a cell
+      if (type == 'building')
+        {
+          w = building.w * UI.cellSize;
+          h = building.h * UI.cellSize;
+          if (subtype != null)
+            sym = 'building_' + subtype;
+          else sym = 'building' + building.w + 'x' + building.h;
+        }
+
+      var img = ui.images.get(sym);
+      if (img == null)
+        {
+          trace(sym);
+          img = ui.images.get('undefined');
+        }
+
+      if (!skipBG)
+        screen.drawImage(img, xx, yy, w, h);
+
+      if (object != null) // paint object
+        {
+          sym = 'object_' + object.getImage();
+          img = ui.images.get(sym);
+          screen.drawImage(img, xx, yy, UI.cellSize, UI.cellSize);
+        }
+
+/*
       var xx = 5 + x * UI.cellSize;
       var yy = -1 + y * UI.cellSize;
 
@@ -102,7 +144,7 @@ class Cell
       // paint cell symbol
       if (isVisible)
         screen.fillText(sym, xx, yy);
-
+*/
       paintMessage(screen, xx, yy); // paint message symbol
       if (map.hasMarker(x, y))
         paintMarker(screen, xx, yy); // paint marker symbol
@@ -214,7 +256,7 @@ class Cell
       else return;
 
       // repaint map around
-      game.map.paint(UI.getRect(x, y, 1));
+      game.map.paint();//UI.getRect(x, y, 4));
     }
 
 
