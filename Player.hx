@@ -29,7 +29,7 @@ class Player
   public inline function getTheoryChance(quality: Int): Int
     {
       var c = 10 + 40 * (quality - 1) - theory * 2;
-      if (c < 0)
+      if (c < 2)
         c = 2;
       return c;
     }
