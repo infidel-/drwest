@@ -11,20 +11,6 @@ class Creature extends CellObject
     }
 
 
-// object color
-  public override function getColor(): String
-    {
-      return 'gray';
-    }
-
-
-// object symbol
-  public override function getSymbol(): String
-    {
-      return '?';
-    }
-
-
 // AI movement
   public override function ai()
     {

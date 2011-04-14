@@ -35,6 +35,13 @@ class Human extends Creature
       aiDefaultCreature();
     }
 
+/*
+  public override function activate(p: Player): Bool
+    {
+      die();
+      return false;
+    }
+*/
 
 // object hit by reanimated
   public override function hit(who: CellObject)
@@ -87,24 +94,6 @@ class Human extends Creature
     }
 
 
-// object color
-  public override function getColor(): String
-    {
-      if (isQuest)
-        return '#00ff00';
-
-      if (state == 'alerted')
-        return 'red';
-
-      if (quality == 1)
-        return '#333333';
-      else if (quality == 2)
-        return '#999999';
-
-      return 'white';
-    }
-
-
 // object image
   public override function getImage(): String
     {
@@ -115,13 +104,6 @@ class Human extends Creature
         return 'human_alerted' + quality;
 
       return 'human' + quality;
-    }
-
-
-// object symbol
-  public override function getSymbol(): String
-    {
-      return 'p';
     }
 
 

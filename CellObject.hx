@@ -109,20 +109,6 @@ class CellObject
     }
 
 
-// object color
-  public function getColor(): String
-    {
-      return 'red';
-    }
-
-
-// object symbol
-  public function getSymbol(): String
-    {
-      return '?';
-    }
-
-
 // object symbol
   public function getImage(): String
     {

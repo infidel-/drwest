@@ -88,18 +88,4 @@ class Reanimated extends Creature
         p3 += '*';
       return p1 + ' [' + level + ']' + p2 + ' ' + p3;
     }
-
-
-// object color
-  public override function getColor(): String
-    {
-      return "brown";
-    }
-
-
-// object symbol
-  public override function getSymbol(): String
-    {
-      return 'z';
-    }
 }

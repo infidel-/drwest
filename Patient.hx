@@ -44,20 +44,6 @@ class Patient extends CellObject
     }
 
 
-// object color
-  public override function getColor(): String
-    {
-      return "#ff0000";
-    }
-
-
-// object symbol
-  public override function getSymbol(): String
-    {
-      return (isSick ? '!' : '+');
-    }
-
-
 // object note
   public override function getNote(): String
     {

@@ -32,7 +32,7 @@ class Body extends CellObject
 
       // gain theory
       var mod = 0;
-      if (100 * Math.random() < 19 + 40 * (quality - 1))
+      if (100 * Math.random() < player.getTheoryChance(quality))
         {
           player.theory++;
           mod = 1;
@@ -137,28 +137,10 @@ class Body extends CellObject
     }
 
 
-// object color
-  public override function getColor(): String
-    {
-      if (quality == 1)
-        return '#333333';
-      else if (quality == 2)
-        return '#999999';
-      return 'white';
-    }
-
-
 // object image
   public override function getImage(): String
     {
       return 'body' + quality;
-    }
-
-
-// object symbol
-  public override function getSymbol(): String
-    {
-      return '_';
     }
 
 

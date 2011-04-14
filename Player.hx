@@ -24,4 +24,13 @@ class Player
     {
       return 1 + Std.int(theory / 3);
     }
+
+
+  public inline function getTheoryChance(quality: Int): Int
+    {
+      var c = 10 + 40 * (quality - 1) - theory * 2;
+      if (c < 0)
+        c = 2;
+      return c;
+    }
 }

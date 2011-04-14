@@ -34,8 +34,9 @@ class Map
   public var markers: List<Marker>; // reanimated markers
   public var messages: Hash<Message>; // game messages
   public var buildings: Array<Building>; // buildings list
-  var cemetery: Building;
-  var police: Building;
+  public var cemetery: Building;
+  public var police: Building;
+  public var copsTotal: Int; // total cops alive on that map
   public var width: Int;
   public var height: Int;
   public var reanimated(getReanimated, null): Int;
@@ -95,6 +96,7 @@ class Map
       markers = new List<Marker>();
       messages = new Hash<Message>();
       buildings = new Array<Building>();
+      copsTotal = Std.int(width * height / 22 + Math.random() * 10);
 
       // clean field
       for (y in 0...height)
@@ -465,6 +467,29 @@ class Map
               //(ui.cursorX == x && ui.cursorY == y), 
               rect);
           }
+
+      paintPolice(map); // police stats
+    }
+
+
+// paint police stuff
+  function paintPolice(map: Dynamic)
+    {
+      map.font = Std.int(UI.cellSize / 2) + "px Verdana";
+      var text = (copsTotal - game.stats.copsDead) + " / " + copsTotal;
+      var metrics = map.measureText(text);
+      var xx = 
+        UI.cellSize * police.x + (UI.cellSize * police.w - metrics.width) / 2;
+      var yy = UI.cellSize * police.y + 50;
+
+      // bg
+      map.fillStyle = "rgba(0, 0, 0, 0.7)";
+      var m2 = map.measureText('?');
+      map.fillRect(xx - 4, yy - 8, metrics.width + 8, m2.width * 2 + 8);
+
+      // text
+      map.fillStyle = "white";
+      map.fillText(text, xx, yy);
     }
 
 

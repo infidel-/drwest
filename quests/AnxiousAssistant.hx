@@ -18,7 +18,7 @@ class AnxiousAssistant extends Quest
   public static function check(game: Game): Bool
     {
       // player needs to have at least 1 reanimated
-      if (game.map.reanimated == 0 || game.player.theory < 3)
+      if (game.map.reanimated == 0 || game.player.theory < 5)
         return false;
 
       // check if first lab cell is occupied

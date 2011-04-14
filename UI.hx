@@ -243,6 +243,11 @@ class UI
           // draw marker help
           else if (game.map.hasMarker(cell.x, cell.y))
             msg('This marker will attract reanimated if they are close enough. ');
+          
+          // building message
+          else if (cell.building == game.map.police)
+            msg('There are ' + 
+              (game.map.copsTotal - game.stats.copsDead) + ' officers left to protect the town.');
 
           else msg('');
 
@@ -302,7 +307,10 @@ class UI
 //        "<td halign=left>Money: " + game.player.money +
         "<td halign=left>Theory: " + game.player.theory +
         "<td halign=left>Suspicion: " + game.player.suspicion +
-        "<td halign=left>Max markers: " + game.player.getMaxMarkers();
+        "<td halign=left>Max markers: " + game.player.getMaxMarkers() +
+        "<td halign=left>TC: " + game.player.getTheoryChance(1) + "% / " +
+          game.player.getTheoryChance(2)+ "% / " +
+          game.player.getTheoryChance(3)+ "%";
 //        "<td halign=left>Town panic: " + game.panic;
         
       s += "<td halign=right><p style='text-align:right; margin-right:5'>" +
@@ -319,17 +327,25 @@ class UI
 
 
 // finish the game (ui)
-  public function finish(isVictory: Bool)
+  public function finish(isVictory: Bool, reason: String)
     {
       var el = untyped UI.e("map");
       var map = el.getContext("2d");
+      map.font = (UI.cellSize - 4) + "px Verdana";
       map.fillStyle = "rgba(0, 0, 0, 0.7)";
       map.fillRect(0, 0, el.width, el.height);
 
       map.fillStyle = "white";
       var text = "";
       if (isVictory)
-        text = "You have finished the game in " + game.turns + " turns!";
+        {
+          var result = '';
+          if (reason == 'police')
+            result = 'removed the official obstacles';
+          else if (reason == 'theory')
+            result = 'perfected your knowledge';
+          text = "You have " + result + " in " + game.turns + " turns!";
+        }
       else text = "You have been found out...";
       var metrics = map.measureText(text);
       var x = (el.width - metrics.width) / 2;

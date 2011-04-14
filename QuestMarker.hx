@@ -20,20 +20,6 @@ class QuestMarker extends CellObject
     }
 
 
-// object color
-  public override function getColor(): String
-    {
-      return '#00ff00';
-    }
-
-
-// object symbol
-  public override function getSymbol(): String
-    {
-      return '?';
-    }
-
-
 // object note
   public override function getNote(): String
     {

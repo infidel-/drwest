@@ -22,8 +22,10 @@ class Game
   public var stats: GameStats;
   public var quests: List<Quest>; // currently active quests
   public var questsCompleted: List<Dynamic>; // quests completed/failed
+  public var questVariables: Hash<Int>; // global quest variables storage
 
   public var panic: Int; // town panic meter
+  public var isPanic: Bool; // is town in panic?
 
   var tasks: List<Task>; // tasks queue
 
@@ -153,6 +155,28 @@ class Game
 // raise or lower panic meter
   function handlePanic()
     {
+      // town becomes panicked
+      var cnt = map.getObjectCount('human', 'human');
+      var max = Std.int(map.width * map.height / 18);
+      if (cnt < max * 0.35)
+        {
+//          trace('panic ' + cnt + ' ' + (max * 0.3) + ' ' + isPanic);
+          if (!isPanic)
+            ui.alert("The town is in panic! The authorities order the police to be on constant patrol.");
+          isPanic = true;
+        }
+
+      if (!isPanic)
+        return;
+
+      for (i in 0...4)
+        {
+          var c = map.findEmpty(map.police.x - 2, map.police.y - 2,
+            map.police.w + 4, map.police.h + 4); 
+          queue('spawn.cop', { x: c.x, y: c.y }, 1);
+        }
+
+/*
       // rot panic
       if (!map.hasReanimated() && panic > 0)
         {
@@ -165,6 +189,7 @@ class Game
         {
           panic += map.reanimated;
         }
+*/        
     }
 
 
@@ -178,7 +203,9 @@ class Game
             continue;
 
           // spawn a cop near x,y
-          if (t.type == 'spawn.cop' && map.getObjectCount('human', 'cop') < 10)
+          var copCount = map.getObjectCount('human', 'cop');
+          if (t.type == 'spawn.cop' && copCount < 10 &&
+              map.copsTotal - stats.copsDead - copCount > 0)
             {
               var cell = map.findEmpty(untyped t.params.x - 1,
                 untyped t.params.y - 1, 2, 2);
@@ -203,22 +230,29 @@ class Game
 
 
 // finish the game
-  public function finish(isVictory: Bool)
+  public function finish(isVictory: Bool, reason: String)
     {
       isFinished = true;
       ui.track((isVictory ? "winGame" : "loseGame"),
-        "", turns);
-      ui.finish(isVictory);
+        reason, turns);
+      ui.finish(isVictory, reason);
     }
 
 
 // check for victory
   public function checkFinish()
     {
-      // theory raised, win
-      if (player.theory >= 10)
+      // all cops dead, win
+      if (stats.copsDead >= map.copsTotal)
         {
-          finish(true);
+          finish(true, 'police');
+          return;
+        }
+
+      // theory raised, win
+      else if (player.theory >= 10)
+        {
+          finish(true, 'theory');
           return;
         }
 
@@ -239,7 +273,7 @@ class Game
         {
           player.suspicion = 3;
           ui.paintStatus();
-          finish(false);
+          finish(false, 'suspicion');
         }
     }
 
@@ -260,18 +294,20 @@ class Game
       isFinished = false;
       turns = 0;
       panic = 0;
+      isPanic = false;
       player = new Player(this);
       quests = new List<Quest>();
       questsCompleted = new List<Dynamic>();
+      questVariables = new Hash<Int>();
       map.generate();
       map.paint();
       ui.paintStatus();
     }
 
 
-  public static var version = "v2"; // game version
+  public static var version = "v3"; // game version
   public static var possibleQuests: Array<Dynamic> =
-    [ quests.AnxiousAssistant, quests.NosyReporter ];
+    [ quests.AnxiousAssistant, quests.NosyReporter, quests.LabEventGeneric ];
 }
 
 

@@ -15,18 +15,4 @@ class Marker extends CellObject
       die();
       return false;
     }
-
-
-// object color
-  public override function getColor(): String
-    {
-      return 'red';
-    }
-
-
-// object symbol
-  public override function getSymbol(): String
-    {
-      return '!';
-    }
 }

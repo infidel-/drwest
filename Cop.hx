@@ -74,6 +74,8 @@ class Cop extends Human
 
       die(); // die and spawn a body
       game.stats.copsDead++;
+      if (game.stats.copsDead > game.map.copsTotal)
+        game.stats.copsDead = game.map.copsTotal;
       game.panic += 15; // dead cops bad for stability
       var o = new Body(game, x, y);
       o.skip = true;
@@ -101,20 +103,6 @@ class Cop extends Human
           else return "\"Where's that damn perpetrator?\"";
         }
       else return "\"Dum-de-dum, patrolling around.\"";
-    }
-
-
-// object color
-  public override function getColor(): String
-    {
-      return "blue";
-    }
-
-
-// object symbol
-  public override function getSymbol(): String
-    {
-      return 'p';
     }
 
 

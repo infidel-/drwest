@@ -25,30 +25,6 @@ class Cell
     }
 
 
-  public static var colors: Dynamic =
-    {
-      grass: "green",
-      building: "gray",
-      swamp: "#339999",
-      water: "blue",
-      tree: "darkgreen",
-      lab: "cyan",
-      cemetery: "#555500",
-      police: "blue",
-    };
-
-  public static var symbols: Dynamic =
-    {
-      grass: ".",
-      building: "#",
-      swamp: ".",
-      water: "~",
-      tree: "*",
-      lab: "#",
-      cemetery: "#",
-      police: "#",
-    };
-
   static var walkable: Dynamic =
     {
       grass: true,
@@ -118,33 +94,6 @@ class Cell
           screen.drawImage(img, xx, yy, UI.cellSize, UI.cellSize);
         }
 
-/*
-      var xx = 5 + x * UI.cellSize;
-      var yy = -1 + y * UI.cellSize;
-
-      var str = type;
-      var sym = '?';
-      if (subtype != null) str = subtype;
-      if (object != null) // object symbol
-        {
-          screen.fillStyle = object.getColor();
-          sym = object.getSymbol();
-        }
-      else // terrain symbol
-        {
-          screen.fillStyle = Reflect.field(colors, str);
-          sym = Reflect.field(symbols, str);
-        }
-      if (sym == "_") // hack - center "_"
-        {
-          xx += 4;
-          yy -= 6;
-        }
-
-      // paint cell symbol
-      if (isVisible)
-        screen.fillText(sym, xx, yy);
-*/
       paintMessage(screen, xx, yy); // paint message symbol
       if (map.hasMarker(x, y))
         paintMarker(screen, xx, yy); // paint marker symbol
@@ -162,8 +111,8 @@ class Cell
       screen.fillRect(xx + 6, yy + 6, metrics.width + 4, metrics.width * 2);
 
       var m = map.markers.first();
-      screen.fillStyle = m.getColor();
-      var sym = m.getSymbol();
+      screen.fillStyle = 'red';
+      var sym = '!';
 
       screen.fillStyle = '#ff0000';
       screen.fillText(sym, xx + 8, yy + 8);
