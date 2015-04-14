@@ -4,6 +4,6 @@ Dr. West is a half-crazy genius bent on proving that the dead human body can be 
 
 Written in [Haxe 2](http://haxe.org)/Javascript. Please note that compiling the project in Haxe 3 will require serious changes.
 
-You will need a HTML5 canvas supporting browser to play the game. At this moment it's either Mozilla Firefox 3.5+, Google Chrome, Opera 11 or latest Safari. The game can be played [here](http://www.in-fi-del.net/static/drwest/index.html).
+You will need a HTML5 canvas supporting browser to play the game. At this moment it's either Mozilla Firefox 3.5+, Google Chrome, Opera 11 or latest Safari. The game can be played [here](http://www.in-fi-del.net/static/drwest/index.html). You can read the manual [here](https://github.com/infidel-/drwest/blob/wiki/Manual.md).
 
-![ttp://www.in-fi-del.net/static/screenshots/drwest_shot_small.png](http://www.in-fi-del.net/static/screenshots/drwest_shot_small.png)
+![http://www.in-fi-del.net/static/screenshots/drwest_shot_small.png](http://www.in-fi-del.net/static/screenshots/drwest_shot_small.png)
