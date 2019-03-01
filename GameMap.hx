@@ -24,22 +24,22 @@ typedef Message =
 }
 
 
-class Map
+class GameMap
 {
   var ui: UI;
   var game: Game;
 
-  var cells: Hash<Cell>;
+  var cells: Map<String, Cell>;
   public var objects: List<CellObject>; // game objects
   public var markers: List<Marker>; // reanimated markers
-  public var messages: Hash<Message>; // game messages
+  public var messages: Map<String,Message>; // game messages
   public var buildings: Array<Building>; // buildings list
   public var cemetery: Building;
   public var police: Building;
   public var copsTotal: Int; // total cops alive on that map
   public var width: Int;
   public var height: Int;
-  public var reanimated(getReanimated, null): Int;
+  public var reanimated(get_reanimated, null): Int;
 
   public function new(g: Game)
     {
@@ -91,10 +91,10 @@ class Map
 // generate map
   public function generate()
     {
-      cells = new Hash<Cell>();
+      cells = new Map();
       objects = new List<CellObject>();
       markers = new List<Marker>();
-      messages = new Hash<Message>();
+      messages = new Map();
       buildings = new Array<Building>();
       copsTotal = Std.int(width * height / 22 + Math.random() * 10);
 
@@ -431,7 +431,7 @@ class Map
 
 
 // getter for reanimated
-  function getReanimated():Int
+  function get_reanimated():Int
     {
       var cnt = 0;
       for (o in objects)

@@ -15,14 +15,14 @@ typedef GameStats =
 class Game
 {
   public var ui: UI;
-  public var map: Map;
+  public var map: GameMap;
   public var turns: Int;
   public var isFinished: Bool;
   public var player: Player;
   public var stats: GameStats;
   public var quests: List<Quest>; // currently active quests
   public var questsCompleted: List<Dynamic>; // quests completed/failed
-  public var questVariables: Hash<Int>; // global quest variables storage
+  public var questVariables: Map<String, Int>; // global quest variables storage
 
   public var panic: Int; // town panic meter
   public var isPanic: Bool; // is town in panic?
@@ -32,7 +32,7 @@ class Game
   public function new()
     {
       ui = new UI(this);
-      map = new Map(this);
+      map = new GameMap(this);
       tasks = new List<Task>();
      
       var hasPlayed = ui.getVar('hasPlayed');
@@ -298,7 +298,7 @@ class Game
       player = new Player(this);
       quests = new List<Quest>();
       questsCompleted = new List<Dynamic>();
-      questVariables = new Hash<Int>();
+      questVariables = new Map<String, Int>();
       map.generate();
       map.paint();
       ui.paintStatus();

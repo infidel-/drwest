@@ -2,7 +2,7 @@
 
 class CellObject
 {
-  public var map: Map;
+  public var map: GameMap;
   var ui: UI;
   var game: Game;
 
