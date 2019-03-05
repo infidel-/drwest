@@ -6,4 +6,6 @@ Written in [Haxe 2](http://haxe.org)/Javascript and converted to Haxe 3 with the
 
 You will need a HTML5 canvas supporting browser to play the game. At this moment it's... pretty much everything, I guess. But still, you need either Mozilla Firefox 3.5+, Google Chrome, Opera 11 or latest Safari. The game can be played [here](http://www.in-fi-del.net/static/drwest/index.html). You can read the manual [here](https://github.com/infidel-/drwest/blob/wiki/Manual.md).
 
+Icon made by Freepik from [www.flaticon.com](https://www.flaticon.com/free-icon/flask_123381)
+
 ![http://www.in-fi-del.net/static/screenshots/drwest_shot_small.png](http://www.in-fi-del.net/static/screenshots/drwest_shot_small.png)
