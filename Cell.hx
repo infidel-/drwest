@@ -1,10 +1,10 @@
 // map cell class
 
-import Map;
+import GameMap;
 
 class Cell
 {
-  public var map: Map;
+  public var map: GameMap;
   var ui: UI;
   var game: Game;
 

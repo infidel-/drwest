@@ -1,6 +1,6 @@
 // player class
 
-import Map;
+import GameMap;
 
 class Player
 {

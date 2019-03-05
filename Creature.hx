@@ -24,15 +24,15 @@ class Creature extends CellObject
       if (Math.random() < 0.2)
         aiChangeRandomDirection();
 
-      var c = map.get(x + Map.dirx[direction],
-        y + Map.diry[direction]);
+      var c = map.get(x + GameMap.dirx[direction],
+        y + GameMap.diry[direction]);
       if (c == null || !c.isWalkable())
         {
           aiChangeRandomDirection();
           return;
         }
-      else move(x + Map.dirx[direction],
-        y + Map.diry[direction]);
+      else move(x + GameMap.dirx[direction],
+        y + GameMap.diry[direction]);
     }
 
 
@@ -42,8 +42,8 @@ class Creature extends CellObject
       var cnt = 0;
       while (true)
         {
-          var dir = Std.int(Math.random() * Map.dirx.length);
-          var c = map.get(x + Map.dirx[dir], y + Map.diry[dir]);
+          var dir = Std.int(Math.random() * GameMap.dirx.length);
+          var c = map.get(x + GameMap.dirx[dir], y + GameMap.diry[dir]);
 
           cnt++; // break infinite loop
           if (cnt > 50)
@@ -61,9 +61,9 @@ class Creature extends CellObject
 // find random adjacent object of this type
   public function aiFindAdjacentObject(t: String, isOutside: Bool): Cell
     {
-      for (i in 0...Map.dirx.length)
+      for (i in 0...GameMap.dirx.length)
         {
-          var c = map.get(x + Map.dirx[i], y + Map.diry[i]);
+          var c = map.get(x + GameMap.dirx[i], y + GameMap.diry[i]);
           if (c == null || c.object == null || c.object.type != t ||
               (c.type == 'building' && isOutside))
             continue;

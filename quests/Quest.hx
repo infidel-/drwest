@@ -6,7 +6,7 @@ package quests;
 class Quest
 {
   var game: Game;
-  var map: Map;
+  var map: GameMap;
 
   // quest parameters
   public var id: String; // all quests must have unique string ID

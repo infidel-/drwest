@@ -1,6 +1,6 @@
 // javascript ui class
 
-import js.Lib;
+import js.Browser;
 
 class UI
 {
@@ -12,7 +12,7 @@ class UI
   public var cursorY: Int;
   public var prevX: Int; // previous mouse coordinates
   public var prevY: Int;
-  public var images: Hash<Dynamic>; // images array
+  public var images: Map<String, Dynamic>; // images array
 
   public var justClicked: Bool; // hack: skip first mouse move after click
   public var msgLocked: Bool; // is msg panel locked until mouse click?
@@ -20,7 +20,7 @@ class UI
   public function new(g: Game)
     {
       game = g;
-      Lib.document.onkeydown = onKey;
+      Browser.document.onkeydown = onKey;
 
       e("version").innerHTML = Game.version;
       e("map").onclick = onMapClick;
@@ -32,10 +32,10 @@ class UI
       // check if canvas is available
       var map = e("map");
       if (!(untyped map).getContext)
-        Lib.window.alert("No canvas available. Please use a canvas-compatible browser like Mozilla Firefox 3.5+ or Google Chrome.");
+        Browser.window.alert("No canvas available. Please use a canvas-compatible browser like Mozilla Firefox 3.5+ or Google Chrome.");
         
       // alert window
-      alertWindow = Lib.document.createElement("alertWindow");
+      alertWindow = Browser.document.createElement("alertWindow");
       alertWindow.style.visibility = 'hidden';
       alertWindow.style.position = 'absolute';
       alertWindow.style.zIndex = 20;
@@ -45,10 +45,10 @@ class UI
       alertWindow.style.top = 250;
       alertWindow.style.background = '#222';
 	  alertWindow.style.border = '4px double #ffffff';
-      Lib.document.body.appendChild(alertWindow);
+      Browser.document.body.appendChild(alertWindow);
 
       // alert text
-      alertText = Lib.document.createElement("alertText");
+      alertText = Browser.document.createElement("alertText");
       alertText.style.overflow = 'auto';
       alertText.style.position = 'absolute';
       alertText.style.left = 10;
@@ -70,7 +70,7 @@ class UI
 // load images
   function loadImages()
     {
-      images = new Hash<Dynamic>();
+      images = new Map<String, Dynamic>();
 
       var imgnames = [ 'tile_building', 'tile_cemetery', 'tile_grass',
         'tile_lab', 'tile_police', 'tile_tree',
@@ -125,7 +125,7 @@ class UI
 // create close button
   function createCloseButton(container: Dynamic, x: Int, y: Int, name: String)
     {
-      var b: Dynamic = Lib.document.createElement(name);
+      var b: Dynamic = Browser.document.createElement(name);
       b.innerHTML = '<b>Close</b>';
       b.style.fontSize = 20;
       b.style.position = 'absolute';
@@ -322,7 +322,7 @@ class UI
 // get element shortcut
   public static inline function e(s)
     {
-	  return Lib.document.getElementById(s);
+	  return Browser.document.getElementById(s);
 	}
 
 
