@@ -1,5 +1,8 @@
 // map class
 
+import js.html.CanvasElement;
+import js.html.CanvasRenderingContext2D;
+
 import quests.Quest;
 
 
@@ -51,7 +54,7 @@ class GameMap
 
 
 // add a message to map
-  public function addMessage(x: Int, y: Int, text: String, ?params: Dynamic)
+  public function addMessage(x: Int, y: Int, text: String, ?params: { ?isImportant: Bool })
     {
       if (params == null)
         params = {};
@@ -442,10 +445,10 @@ class GameMap
 
 
 // paint map
-  public function paint(?rect: Dynamic)
+  public function paint(?rect = null)
     {
-      var el = untyped UI.e("map");
-      var map = el.getContext("2d");
+      var el: CanvasElement = cast UI.e("map");
+      var map = el.getContext2d();
       map.font = (UI.cellSize - 3) + "px Verdana";
       map.fillStyle = "black";
       map.textBaseline = "top";
@@ -473,7 +476,7 @@ class GameMap
 
 
 // paint police stuff
-  function paintPolice(map: Dynamic)
+  function paintPolice(map: CanvasRenderingContext2D)
     {
       map.font = Std.int(UI.cellSize / 2) + "px Verdana";
       var text = (copsTotal - game.stats.copsDead) + " / " + copsTotal;

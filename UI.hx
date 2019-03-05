@@ -1,18 +1,22 @@
 // javascript ui class
 
 import js.Browser;
+import js.html.Image;
+import js.html.KeyboardEvent;
+import js.html.Element;
+import js.html.CanvasElement;
 
 class UI
 {
   var game: Game;
 
-  var alertWindow: Dynamic; // alert window element
-  var alertText: Dynamic; // alert text element
+  var alertWindow: Element; // alert window element
+  var alertText: Element; // alert text element
   public var cursorX: Int; // cursor x,y in map coordinates
   public var cursorY: Int;
   public var prevX: Int; // previous mouse coordinates
   public var prevY: Int;
-  public var images: Map<String, Dynamic>; // images array
+  public var images: Map<String, Image>; // images array
 
   public var justClicked: Bool; // hack: skip first mouse move after click
   public var msgLocked: Bool; // is msg panel locked until mouse click?
@@ -33,16 +37,16 @@ class UI
       var map = e("map");
       if (!(untyped map).getContext)
         Browser.window.alert("No canvas available. Please use a canvas-compatible browser like Mozilla Firefox 3.5+ or Google Chrome.");
-        
+
       // alert window
       alertWindow = Browser.document.createElement("alertWindow");
       alertWindow.style.visibility = 'hidden';
       alertWindow.style.position = 'absolute';
-      alertWindow.style.zIndex = 20;
-      alertWindow.style.width = 600;
-      alertWindow.style.height = 250;
-      alertWindow.style.left = 200; 
-      alertWindow.style.top = 250;
+      alertWindow.style.zIndex = '20';
+      alertWindow.style.width = '600px';
+      alertWindow.style.height = '250px';
+      alertWindow.style.left = '200px';
+      alertWindow.style.top = '250px';
       alertWindow.style.background = '#222';
 	  alertWindow.style.border = '4px double #ffffff';
       Browser.document.body.appendChild(alertWindow);
@@ -51,10 +55,10 @@ class UI
       alertText = Browser.document.createElement("alertText");
       alertText.style.overflow = 'auto';
       alertText.style.position = 'absolute';
-      alertText.style.left = 10;
-      alertText.style.top = 10;
-      alertText.style.width = 580;
-      alertText.style.height = 200;
+      alertText.style.left = '10px';
+      alertText.style.top = '10px';
+      alertText.style.width = '580px';
+      alertText.style.height = '200px';
       alertText.style.background = '#111';
 	  alertText.style.border = '1px solid #777';
       alertWindow.appendChild(alertText);
@@ -70,7 +74,7 @@ class UI
 // load images
   function loadImages()
     {
-      images = new Map<String, Dynamic>();
+      images = new Map();
 
       var imgnames = [ 'tile_building', 'tile_cemetery', 'tile_grass',
         'tile_lab', 'tile_police', 'tile_tree',
@@ -85,7 +89,7 @@ class UI
 
       for (nm in imgnames)
         {
-          var img = untyped __js__("new Image()");
+          var img = new Image();
           img.onload = onLoadImage;
           img.src = 'images/' + nm + '.png';
 
@@ -101,7 +105,7 @@ class UI
 
 
 // keypress handling
-  function onKey(ev: Dynamic)
+  function onKey(ev: KeyboardEvent)
     {
       var key = ev.keyCode;
 
@@ -111,28 +115,26 @@ class UI
 
       // dont propagate space button
       if (ev.keyCode == 32)
-        { 
-          if (ev.stopPropagation)
-            ev.stopPropagation();
+        {
+          ev.stopPropagation();
 
           ev.cancelBubble = true;
-          ev.returnValue = false;
           ev.preventDefault();
         }
     }
 
 
 // create close button
-  function createCloseButton(container: Dynamic, x: Int, y: Int, name: String)
+  function createCloseButton(container: Element, x: Int, y: Int, name: String)
     {
-      var b: Dynamic = Browser.document.createElement(name);
+      var b = Browser.document.createElement(name);
       b.innerHTML = '<b>Close</b>';
-      b.style.fontSize = 20;
+      b.style.fontSize = '20px';
       b.style.position = 'absolute';
-      b.style.width = 80;
-      b.style.height = 25;
-      b.style.left = x;
-      b.style.top = y;
+      b.style.width = '80px';
+      b.style.height = '25px';
+      b.style.left = x + 'px';
+      b.style.top = y + 'px';
       b.style.background = '#111';
 	  b.style.border = '1px outset #777';
 	  b.style.cursor = 'pointer';
@@ -172,7 +174,7 @@ class UI
     {
       if (game.isFinished)
         return;
-  
+
       // clean msg lock
       if (msgLocked)
         {
@@ -183,7 +185,7 @@ class UI
       var map = e("map");
       var x = event.clientX - map.offsetLeft - 14;
       var y = event.clientY - map.offsetTop - 14;
-      var cellX = Std.int((x - 5) / cellSize); 
+      var cellX = Std.int((x - 5) / cellSize);
       var cellY = Std.int((y - 7) / cellSize);
 //      trace(x + "," + y + " -> " + cellX + "," + cellY);
 
@@ -210,11 +212,11 @@ class UI
         return;
 
       var map = e("map");
-      var x = event.clientX - map.offsetLeft - 14; 
+      var x = event.clientX - map.offsetLeft - 14;
       var y = event.clientY - map.offsetTop - 14;
 //      trace(x + ' ' + y + ' : ' + map.offsetLeft + ',' + map.offsetTop);
 
-      cursorX = Std.int((x - 5) / cellSize); 
+      cursorX = Std.int((x - 5) / cellSize);
       cursorY = Std.int((y - 7) / cellSize);
 /*
       // paint changed rectangle
@@ -243,10 +245,10 @@ class UI
           // draw marker help
           else if (game.map.hasMarker(cell.x, cell.y))
             msg('This marker will attract reanimated if they are close enough. ');
-          
+
           // building message
           else if (cell.building == game.map.police)
-            msg('There are ' + 
+            msg('There are ' +
               (game.map.copsTotal - game.stats.copsDead) + ' officers left to protect the town.');
 
           else msg('');
@@ -254,7 +256,7 @@ class UI
         }
       else
         {
-          tip("");
+          tip('');
           msg('');
         }
 
@@ -266,10 +268,11 @@ class UI
 // get a rect around a cell
   public static function getRect(x: Int, y: Int, radius: Int)
     {
-      var rect = { 
+      var rect = {
         x: 3 + (x - radius) * cellSize,
         y: 2 + (y - radius) * cellSize,
-        w: cellSize * radius * 2, h: cellSize * radius * 2 };
+        w: cellSize * radius * 2,
+        h: cellSize * radius * 2 };
       if (radius == 0)
         {
           rect.w = cellSize;
@@ -312,7 +315,7 @@ class UI
           game.player.getTheoryChance(2)+ "% / " +
           game.player.getTheoryChance(3)+ "%";
 //        "<td halign=left>Town panic: " + game.panic;
-        
+
       s += "<td halign=right><p style='text-align:right; margin-right:5'>" +
         "Turns: " + game.turns + "</table>";
       e("status").innerHTML = s;
@@ -329,8 +332,8 @@ class UI
 // finish the game (ui)
   public function finish(isVictory: Bool, reason: String)
     {
-      var el = untyped UI.e("map");
-      var map = el.getContext("2d");
+      var el: CanvasElement = cast UI.e("map");
+      var map = el.getContext2d();
       map.font = (UI.cellSize - 4) + "px Verdana";
       map.fillStyle = "rgba(0, 0, 0, 0.7)";
       map.fillRect(0, 0, el.width, el.height);
@@ -343,7 +346,7 @@ class UI
           if (reason == 'police')
             result = 'removed the official obstacles';
           else if (reason == 'theory')
-            result = 'perfected your knowledge';
+            result = 'proved your theory';
           text = "You have " + result + " in " + game.turns + " turns!";
         }
       else text = "You have been found out...";

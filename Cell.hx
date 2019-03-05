@@ -1,5 +1,7 @@
 // map cell class
 
+import js.html.CanvasRenderingContext2D;
+
 import GameMap;
 
 class Cell
@@ -25,7 +27,7 @@ class Cell
     }
 
 
-  static var walkable: Dynamic =
+  static var walkable =
     {
       grass: true,
       building: false,
@@ -33,14 +35,12 @@ class Cell
       water: false,
       tree: false,
     };
-
-
   static var dx: Array<Int> = [ 1, -1, 0, 0, 1, -1, 1, -1 ];
   static var dy: Array<Int> = [ 0, 0, 1, -1, 1, -1, -1, 1 ];
 
 
 // paint cell
-  public function paint(screen: Dynamic, isSelected: Bool, rect: Dynamic)
+  public function paint(screen: CanvasRenderingContext2D, isSelected: Bool, rect)
     {
       var x1 = 3 + x * UI.cellSize;
       var x2 = 3 + x * UI.cellSize + UI.cellSize;
@@ -101,7 +101,7 @@ class Cell
 
 
 // paint marker symbol
-  function paintMarker(screen: Dynamic, xx: Int, yy: Int)
+  function paintMarker(screen: CanvasRenderingContext2D, xx: Int, yy: Int)
     {
       // background
       var oldFont = screen.font;
@@ -122,7 +122,7 @@ class Cell
 
 
 // paint message symbol
-  function paintMessage(screen: Dynamic, xx: Int, yy: Int)
+  function paintMessage(screen: CanvasRenderingContext2D, xx: Int, yy: Int)
     {
       var msg = map.getMessage(x, y);
       if (msg == null)

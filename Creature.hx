@@ -163,7 +163,7 @@ class Creature extends CellObject
                 c.object.type != 'human' || c.object == this)
               continue;
 
-            var o: Human = untyped c.object;
+            var o: Human = cast c.object;
             o.alert(x, y);
             game.panic++; // each alerted human raises panic
           }

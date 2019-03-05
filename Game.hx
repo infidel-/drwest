@@ -207,8 +207,9 @@ class Game
           if (t.type == 'spawn.cop' && copCount < 10 &&
               map.copsTotal - stats.copsDead - copCount > 0)
             {
-              var cell = map.findEmpty(untyped t.params.x - 1,
-                untyped t.params.y - 1, 2, 2);
+              var x: Int = t.params.x;
+              var y: Int = t.params.y;
+              var cell = map.findEmpty(x - 1, y - 1, 2, 2);
               if (cell != null)
                 {
                   var o = new Cop(this, cell.x, cell.y);
@@ -306,8 +307,11 @@ class Game
 
 
   public static var version = "v3"; // game version
-  public static var possibleQuests: Array<Dynamic> =
-    [ quests.AnxiousAssistant, quests.NosyReporter, quests.LabEventGeneric ];
+  public static var possibleQuests: Array<Dynamic> = [
+    quests.AnxiousAssistant,
+    quests.NosyReporter,
+    quests.LabEventGeneric
+  ];
 }
 
 
