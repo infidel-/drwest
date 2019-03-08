@@ -261,6 +261,8 @@ class Cell
       var s = "";
       if (object != null)
         s = object.getNote();
+      else if (building != null)
+        s = building.name;
       else if (subtype != null)
         s = subtype;
       else s = type;

@@ -30,7 +30,11 @@ class UI
       e("map").onclick = onMapClick;
       e("map").onmousemove = onMapMove;
       e("restart").onclick = onRestart;
+      e('restart').onmouseenter = tooltip.bind('Restart');
+      e('restart').onmouseleave = clearMessage;
       e("endTurn").onclick = onEndTurn;
+      e('endTurn').onmouseenter = tooltip.bind('EndTurn');
+      e('endTurn').onmouseleave = clearMessage;
       msgLocked = false;
 
       // check if canvas is available
@@ -63,11 +67,61 @@ class UI
 	  alertText.style.border = '1px solid #777';
       alertWindow.appendChild(alertText);
 
+      var status = e('status');
+      status.innerHTML = "<table width=100%><tr>" +
+        "<td halign=left id=statusTheory>" +
+        "<td halign=left id=statusSuspicion>" +
+        "<td halign=left id=statusMarkers>" +
+        "<td halign=left id=statusChance>" +
+        "<td halign=left><span id=statusPanic style='color:#ee1111'></span>" +
+        "<td halign=left><span id=statusAggression style='color:#22eeee'></span>" +
+        "<td halign=right><p id=statusTurns style='text-align:right; margin-right:5'>" +
+        "</table>";
+      for (el in [ 'Theory', 'Suspicion', 'Markers', 'Chance',
+          'Panic', 'Aggression', 'Turns' ])
+        {
+          e('status' + el).onmouseenter = tooltip.bind(el);
+          e('status' + el).onmouseleave = clearMessage;
+        }
+
       // alert close button
       var alertClose = createCloseButton(alertWindow, 260, 215, 'alertClose');
 	  alertClose.onclick = onAlertCloseClick;
 
       loadImages();
+    }
+
+
+// show tooltip for UI element
+  function tooltip(el: String)
+    {
+      var s = null;
+      if (el == 'Theory')
+        s = 'Current theory progress. You win when it reaches 10.';
+      else if (el == 'Suspicion')
+        s = 'Current authorities suspicion. You lose when it reaches 3.';
+      else if (el == 'Markers')
+        s = 'Maximum amount of markers to control the reanimated with.';
+      else if (el == 'Chance')
+        s = 'Chance of theory progress on bodies with quality 1/2/3.';
+      else if (el == 'Panic')
+        s = 'The town is in panic! Police patrols near the station.';
+      else if (el == 'Aggression')
+        s = 'The reanimated are aggressive. Read more in hints.';
+      else if (el == 'Turns')
+        s = 'The amount of turns passed since game start.';
+      else if (el == 'EndTurn')
+        s = 'Press to end game turn.';
+      else if (el == 'Restart')
+        s = 'Press to restart the game.';
+      msg(s);
+    }
+
+
+// clear message
+  function clearMessage()
+    {
+      msg('');
     }
 
 
@@ -246,10 +300,33 @@ class UI
           else if (game.map.hasMarker(cell.x, cell.y))
             msg('This marker will attract reanimated if they are close enough. ');
 
-          // building message
+          // police building
           else if (cell.building == game.map.police)
-            msg('There are ' +
-              (game.map.copsTotal - game.stats.copsDead) + ' officers left to protect the town.');
+            {
+              var s = new StringBuf();
+              s.add('There are ' +
+                (game.map.copsTotal - game.stats.copsDead) +
+                ' officers left');
+              if (game.map.police.reanimated > 0)
+                {
+                  s.add('. ' + game.map.police.reanimated +
+                    ' reanimated ');
+                  if (game.map.police.reanimated == 1)
+                    s.add('is');
+                  else s.add('are');
+                  s.add(' in the building.');
+                }
+              else s.add(' to protect the town.');
+              msg(s.toString());
+            }
+
+          // cemetery
+          else if (cell.building == game.map.cemetery)
+            msg('The town cemetery is your main source of bodies.');
+
+          // lab
+          else if (cell.building == game.player.lab)
+            msg('Macabre science is being done here!');
 
           else msg('');
 
@@ -306,19 +383,21 @@ class UI
 // repaint status panel (fsta)
   public function paintStatus()
     {
-      var s = "<table width=100%><tr>" +
-//        "<td halign=left>Money: " + game.player.money +
-        "<td halign=left>Theory: " + game.player.theory +
-        "<td halign=left>Suspicion: " + game.player.suspicion +
-        "<td halign=left>Max markers: " + game.player.getMaxMarkers() +
-        "<td halign=left>TC: " + game.player.getTheoryChance(1) + "% / " +
-          game.player.getTheoryChance(2)+ "% / " +
-          game.player.getTheoryChance(3)+ "%";
-//        "<td halign=left>Town panic: " + game.panic;
-
-      s += "<td halign=right><p style='text-align:right; margin-right:5'>" +
-        "Turns: " + game.turns + "</table>";
-      e("status").innerHTML = s;
+      e('statusTheory').innerHTML = 'Theory: ' +
+        game.player.theory;
+      e('statusSuspicion').innerHTML = 'Suspicion: ' +
+        game.player.suspicion;
+      e('statusMarkers').innerHTML = 'Markers: ' +
+        game.player.getMaxMarkers();
+      e('statusChance').innerHTML = 'Chance: ' +
+        game.player.getTheoryChance(1) + "% / " +
+        game.player.getTheoryChance(2)+ "% / " +
+        game.player.getTheoryChance(3)+ "%";
+      e('statusPanic').innerHTML =
+        (game.isPanic ? 'PANIC!' : '');
+      e('statusAggression').innerHTML =
+        (game.aggressionFlag ? 'AG' : '');
+      e('statusTurns').innerHTML = 'Turns: ' + game.turns;
     }
 
 
@@ -346,7 +425,7 @@ class UI
           if (reason == 'police')
             result = 'removed the official obstacles';
           else if (reason == 'theory')
-            result = 'proved your theory';
+            result = 'proven your theory';
           text = "You have " + result + " in " + game.turns + " turns!";
         }
       else text = "You have been found out...";
@@ -359,20 +438,25 @@ class UI
       var font = Std.int(0.4 * UI.cellSize);
       map.font = font + "px Verdana";
       map.fillStyle = "yellow";
+      var i = 0;
       map.fillText(game.stats.humansDead +
-        " citizens died during the course of these horrible events.", 10, y + 70);
+        " citizens died during the course of these horrible events.",
+        10, y + 70);
       map.fillText(game.stats.copsDead +
         " police officers died fulfilling their duty.",
-        10, y + 70 + font + 10);
+        10, y + 70 + (font + 10) * (++i));
       map.fillText(game.stats.bodiesTested +
         " different solutions were tested on the specimens.",
-        10, y + 70 + (font + 10) * 2);
+        10, y + 70 + (font + 10) * (++i));
       map.fillText(game.stats.bodiesReanimated +
         " specimens were successfully reanimated.",
-        10, y + 70 + (font + 10) * 3);
+        10, y + 70 + (font + 10) * (++i));
       map.fillText(game.stats.reanimatedDestroyed +
         " reanimated bodies were put down by the police.",
-        10, y + 70 + (font + 10) * 4);
+        10, y + 70 + (font + 10) * (++i));
+      if (game.aggressionFlag)
+        map.fillText("The reanimated were aggressive.",
+          10, y + 70 + (font + 10) * (++i));
     }
 
 

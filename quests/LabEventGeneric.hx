@@ -45,10 +45,10 @@ class LabEventGeneric extends Quest
       if (o.questTag != '_markerStart')
         return;
 
-      var rnd = Math.random() * 100;
-      var rnd2 = Math.random() * 100;
+      var rnd = Std.random(100);
+      var rnd2 = Std.random(100);
       var cnt = 7; // to split probability equally between different events
-      var avg = 100 / cnt;
+      var avg = 100.0 / cnt;
       var chance = 15;
 
       // faulty equipment
@@ -65,7 +65,7 @@ class LabEventGeneric extends Quest
       // new equipment received
       else if (rnd < avg * 2)
         {
-          message("Ordered earlier equipment is finally delivered to your laboratory... " +
+          message("Equipment ordered earlier is finally delivered to your laboratory... " +
             (rnd2 < chance ?
               "and it gives a huge bonus to your research! [Theory +1]" :
               "but it falls short of your expectations."));
@@ -87,7 +87,7 @@ class LabEventGeneric extends Quest
       // experimental chemicals received
       else if (rnd < avg * 4)
         {
-          message("Ordered by mail experimental chemicals finally make it to your laboratory... " +
+          message("Experimental chemicals ordered by mail finally make it to your laboratory... " +
             (rnd2 < chance ?
               "and they give a huge bonus to your research! [Theory +1]" :
               "but they fall short of your expectations."));
@@ -109,7 +109,7 @@ class LabEventGeneric extends Quest
       // medicine journal
       else if (rnd < avg * 6)
         {
-          message("Reading the freshly received by mail medicine journal... " +
+          message("Reading the fresh medicine journal... " +
             (rnd2 < chance ?
               "you feel new ideas forming in your brain! [Theory +1]" :
               "you find nothing of interest."));
@@ -117,15 +117,15 @@ class LabEventGeneric extends Quest
             game.player.theory += 1;
         }
 
-      // mysterious letter
-      else if (rnd < avg * 6)
+      // strange letter
+      else if (rnd < avg * 7)
         {
-          message("Browsing through the freshly received mail... " +
+          message("Browsing through the mail... " +
             (rnd2 < chance ?
-              "you find a strange letter from a person you don't know discussing your research with a degree of knowledge." :
+              "you find a strange letter from a person you don't know discussing your research with a high degree of knowledge." :
               "you find nothing of interest."));
           if (rnd2 < chance)
-            game.questVariables.set('mysteriousLetterReceived', 1);
+            game.questVariables.set('strangeLetterReceived', 1);
         }
 
       o.die();

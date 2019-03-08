@@ -67,7 +67,6 @@ class Body extends CellObject
           game.stats.bodiesReanimated++;
         }
 
-//      ui.msg(
       map.addMessage(x, y, 
         (spawnOk ? "With the new solution the body is reanimated! " : 'You have failed to reanimate the body. ') +
         (mod > 0 ? '[Theory +' + mod + ']' : ''),

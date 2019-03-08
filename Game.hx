@@ -27,6 +27,8 @@ class Game
   public var panic: Int; // town panic meter
   public var isPanic: Bool; // is town in panic?
 
+  public var aggressionFlag: Bool; // aggression event flag
+
   var tasks: List<Task>; // tasks queue
 
   public function new()
@@ -34,6 +36,7 @@ class Game
       ui = new UI(this);
       map = new GameMap(this);
       tasks = new List<Task>();
+      aggressionFlag = false;
      
       var hasPlayed = ui.getVar('hasPlayed');
       if (hasPlayed == null)
@@ -78,6 +81,9 @@ class Game
           else o.skip = false;
         }
 
+      // police vs reanimated
+      handlePoliceStation();
+
       map.paint();
       ui.paintStatus();
       checkFinish();
@@ -98,7 +104,7 @@ class Game
 
 
 // spawn quests
-  public function spawnQuests()
+  function spawnQuests()
     {
       // check probability
       var prob = 0.05;
@@ -148,6 +154,35 @@ class Game
 
           questsCompleted.add(cl);
           return; // one quest at a time
+        }
+    }
+
+
+// reanimated in police station handling
+  function handlePoliceStation()
+    {
+      if (map.police.reanimated == 0)
+        return;
+
+      for (i in 0...map.police.reanimated)
+        {
+          // chance to kill a cop
+          if (Std.random(100) < 75)
+            {
+              stats.copsDead++;
+              panic += 20;
+              map.addMessage(map.police.x, map.police.y,
+                'An officer goes down in the station.');
+            }
+
+          // chance to die
+          if (Std.random(100) < 50)
+            {
+              map.police.reanimated--;
+              stats.reanimatedDestroyed++;
+              map.addMessage(map.police.x, map.police.y,
+                'Reanimated has been put down.');
+            }
         }
     }
 
@@ -306,11 +341,12 @@ class Game
     }
 
 
-  public static var version = "v3"; // game version
+  public static var version = "v4"; // game version
   public static var possibleQuests: Array<Dynamic> = [
     quests.AnxiousAssistant,
     quests.NosyReporter,
-    quests.LabEventGeneric
+    quests.LabEventGeneric,
+    quests.WaxHeadedVisitor,
   ];
 }
 

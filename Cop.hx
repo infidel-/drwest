@@ -63,7 +63,8 @@ class Cop extends Human
       if (who.type != 'reanimated')
         return;
 
-      if (Math.random() < 0.6) // 60% chance to hit
+      // 60% chance to hit or aggression event
+      if (Std.random(100) < 60 || game.aggressionFlag)
         life--;
       isHit = true;
       aiAlertAroundMe(); // alert people

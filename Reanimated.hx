@@ -8,6 +8,7 @@ class Reanimated extends Creature
     {
       super(g, xv, yv);
       type = 'reanimated';
+      name = 'reanimated';
       level = 1;
       life = 3;
     }
@@ -30,7 +31,16 @@ class Reanimated extends Creature
   public override function ai()
     {
       // find close humans and attack
-      var c = aiFindAdjacentObject('human', false);
+      // aggression event - chance of attacking other reanimated
+      var c = null;
+      if (game.aggressionFlag)
+        {
+          c = aiFindAdjacentObject('reanimated', false);
+          if (c != null && Std.random(100) > 50)
+            c = null;
+        }
+      if (c == null)
+        c = aiFindAdjacentObject('human', false);
       if (c != null)
         {
           map.addMessage(x, y, 'The reanimated attacks ' +
@@ -52,6 +62,35 @@ class Reanimated extends Creature
 
               life = 2 + level;
 
+              return;
+            }
+        }
+
+      // aggression - can enter police station
+      if (game.aggressionFlag)
+        {
+          // check if near station
+          var b = game.map.police;
+          var nearStation = false;
+          for (i in 0...GameMap.dirx.length)
+            {
+              var cell = game.map.get(
+                x + GameMap.dirx[i],
+                y + GameMap.diry[i]);
+              if (cell == null || cell.building != game.map.police)
+                continue;
+
+              nearStation = true;
+              break;
+            }
+
+          // remove AI and add to station
+          if (nearStation)
+            {
+              game.map.police.reanimated++;
+              map.addMessage(x, y, 'The reanimated enters the police station.');
+
+              die();
               return;
             }
         }

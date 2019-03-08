@@ -84,7 +84,7 @@ class CellObject
 
 // object activation
 // -- returns true if turn ended
-  public function activate(p: Player): Bool
+  public dynamic function activate(p: Player): Bool
     {
       return false;
     }

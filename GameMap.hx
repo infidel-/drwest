@@ -14,6 +14,9 @@ typedef Building =
   var w: Int;
   var h: Int;
   var t: String; // building type
+  var name: String;
+
+  var reanimated: Int; // police only - reanimated in building
 };
 
 
@@ -187,8 +190,16 @@ class GameMap
             if (!ok)
               continue;
               
-            var rect = { x: x, y: y, w: sx, h: sy, t: null };
-            bldg.push(rect);
+            var b = {
+              x: x,
+              y: y,
+              w: sx,
+              h: sy,
+              t: null,
+              name: null,
+              reanimated: 0,
+            };
+            bldg.push(b);
           }
 
       // find position for special buildings 
@@ -221,16 +232,19 @@ class GameMap
             {
               b.w = 2;
               b.h = 2;
+              b.name = 'laboratory';
             }
           else if (t == 'police')
             {
               b.w = 3;
               b.h = 3;
+              b.name = 'police station';
             }
           else if (t == 'cemetery')
             {
               b.w = 3;
               b.h = 2;
+              b.name = 'cemetery';
             }
         }
 
@@ -478,6 +492,7 @@ class GameMap
 // paint police stuff
   function paintPolice(map: CanvasRenderingContext2D)
     {
+      // X/Y police officers text
       map.font = Std.int(UI.cellSize / 2) + "px Verdana";
       var text = (copsTotal - game.stats.copsDead) + " / " + copsTotal;
       var metrics = map.measureText(text);
@@ -493,6 +508,13 @@ class GameMap
       // text
       map.fillStyle = "white";
       map.fillText(text, xx, yy);
+
+      // X reanimated text
+      if (game.map.police.reanimated > 0)
+        {
+          map.fillStyle = '#ff3333';
+          map.fillText('' + game.map.police.reanimated, xx, yy + 30);
+        }
     }
 
 
