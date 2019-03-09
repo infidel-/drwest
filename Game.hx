@@ -107,9 +107,7 @@ class Game
   function spawnQuests()
     {
       // check probability
-      var prob = 0.05;
-      if (quests.length > 0)
-        prob = 0.025;
+      var prob = 0.1;
       var rnd = Math.random();
       if (rnd > prob)
         return;
@@ -328,6 +326,7 @@ class Game
           reanimatedDestroyed: 0
         };
       isFinished = false;
+      aggressionFlag = false;
       turns = 0;
       panic = 0;
       isPanic = false;
@@ -343,10 +342,10 @@ class Game
 
   public static var version = "v4"; // game version
   public static var possibleQuests: Array<Dynamic> = [
+    quests.WaxHeadedVisitor,
     quests.AnxiousAssistant,
     quests.NosyReporter,
     quests.LabEventGeneric,
-    quests.WaxHeadedVisitor,
   ];
 }
 

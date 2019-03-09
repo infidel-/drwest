@@ -217,6 +217,9 @@ class UI
 // on clicking restart button
   public function onEndTurn(event)
     {
+      if (alertWindow.style.visibility == 'visible')
+        return;
+
       msgLocked = false;
       msg("", false);
       game.endTurn();

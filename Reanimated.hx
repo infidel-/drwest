@@ -43,8 +43,10 @@ class Reanimated extends Creature
         c = aiFindAdjacentObject('human', false);
       if (c != null)
         {
-          map.addMessage(x, y, 'The reanimated attacks ' +
-            c.object.name + '.');
+          map.addMessage(x, y, 'The reanimated attack' +
+            (c.object.type != 'reanimated' ?
+             's ' + c.object.name :
+             ' each other') + '.');
           c.object.hit(this); // attack
 
           return;
